@@ -26,6 +26,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation('jakarta.servlet:jakarta.servlet-api:5.0.0')
+    implementation('org.springframework:spring-webmvc:6.1.13')
     implementation('org.postgresql:postgresql:42.7.4')
     implementation('org.hibernate.orm:hibernate-core:6.6.1.Final')
     implementation('com.zaxxer:HikariCP:6.0.0')
