@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Tracker – Homepage</title>
+</head>
+<body>
+
+<h1>Weather Tracker – Homepage</h1>
+
+
+<div th:if="${authenticated}">
+    <p th:text="${user.username}" />
+
+    <form th:action="@{/auth/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <h2>Your Locations</h2>
+</div>
+
+<div th:if="${!authenticated}">
+    <p><button onclick="window.location.href='/auth/signin';">Sign in</button></p>
+    <p><button onclick="window.location.href='/auth/signup';">Sign up</button></p>
+</div>
+
+</body>
+</html>
