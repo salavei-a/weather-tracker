@@ -18,8 +18,8 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "login", length = 39, nullable = false, unique = true)
-    private String login;
+    @Column(name = "username", length = 39, nullable = false, unique = true)
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;

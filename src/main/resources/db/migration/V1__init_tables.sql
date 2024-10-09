@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users
 (
     id       BIGINT       NOT NULL GENERATED ALWAYS AS IDENTITY,
-    login    VARCHAR(39)  NOT NULL UNIQUE,
+    username VARCHAR(39)  NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
