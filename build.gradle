@@ -34,8 +34,7 @@ dependencies {
     implementation('ch.qos.logback:logback-classic:1.5.8')
     implementation('org.flywaydb:flyway-core:10.19.0')
     implementation('org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE')
-
-    compileOnly('org.projectlombok:lombok:1.18.34')
+    implementation('org.mapstruct:mapstruct:1.6.2')
 
     runtimeOnly('org.flywaydb:flyway-database-postgresql:10.19.0')
 
