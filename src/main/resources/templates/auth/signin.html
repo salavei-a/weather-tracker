@@ -7,8 +7,8 @@
 <body>
 
 <form th:method="post" th:action="@{/auth/signin}" th:object="${user}">
-    <label for="login">Login</label>
-    <input type="text" th:field="*{login}" id="login"/>
+    <label for="username">Username</label>
+    <input type="text" th:field="*{username}" id="username"/>
 
     <br/>
 
