@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Location Results</title>
+</head>
+<body>
+
+<a th:href="@{/}">Home</a>
+
+<p th:text="${user.username}" />
+
+<form th:action="@{/auth/signout}" method="post">
+    <button type="submit">Sign out</button>
+</form>
+
+<br>
+
+<form action="/locations" method="get">
+    <label>
+        <input type="text" name="name" placeholder="Enter location" required>
+    </label>
+    <button type="submit">Search</button>
+</form>
+
+<h2>Locations:</h2>
+
+<div th:if="${locations != null}">
+    <ul>
+        <li th:each="location : ${locations}">
+            <p th:text="'Name: ' + ${location.name}"></p>
+            <p th:text="'Latitude: ' + ${location.latitude}"></p>
+            <p th:text="'Longitude: ' + ${location.longitude}"></p>
+            <p th:text="'Country: ' + ${location.country}"></p>
+        </li>
+    </ul>
+</div>
+
+<div th:if="${locations == null}">
+    <p>No locations found. Please try another search.</p>
+</div>
+
+</body>
+</html>
