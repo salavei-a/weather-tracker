@@ -3,6 +3,7 @@ package com.asalavei.weathertracker.web.controller;
 import com.asalavei.weathertracker.dbaccess.entity.User;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
+import com.asalavei.weathertracker.mapper.UserMapper;
 import com.asalavei.weathertracker.service.WeatherService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,12 @@ import java.util.List;
 public class LocationController {
 
     private final WeatherService weatherService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public LocationController(WeatherService weatherService) {
+    public LocationController(WeatherService weatherService, UserMapper userMapper) {
         this.weatherService = weatherService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
@@ -33,13 +36,14 @@ public class LocationController {
             return "redirect:/auth/signin";
         }
 
+        model.addAttribute("user", userMapper.toDto(user));
+
         if (locationRequestDto.getName() == null) {
             return "locations";
         }
 
         List<LocationResponseDto> locations = weatherService.getLocationDetails(locationRequestDto.getName());
 
-        model.addAttribute("user", user);
         model.addAttribute("locations", locations);
 
         return "locations";
