@@ -3,6 +3,7 @@ package com.asalavei.weathertracker.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,6 +19,11 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.asalavei.weathertracker")
 public class WebConfig implements WebMvcConfigurer {
+
+    @Bean
+    public RestClient restClient() {
+        return RestClient.create();
+    }
 
     @Bean
     public ViewResolver viewResolver() {
