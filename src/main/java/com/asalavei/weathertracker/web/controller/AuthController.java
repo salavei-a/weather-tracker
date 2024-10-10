@@ -28,12 +28,12 @@ public class AuthController {
     }
 
     @GetMapping("/signin")
-    public String signInPage(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signInForm(@ModelAttribute("user") UserRequestDto userRequestDto) {
         return "auth/signin";
     }
 
     @PostMapping("/signin")
-    public String processSignIn(@ModelAttribute("user") UserRequestDto userRequestDto, HttpServletResponse response) {
+    public String signIn(@ModelAttribute("user") UserRequestDto userRequestDto, HttpServletResponse response) {
         User user = authenticationService.authenticate(userRequestDto);
         Session session = sessionService.create(user);
         Cookie cookie = new Cookie("sessionid", session.getId());
@@ -48,18 +48,18 @@ public class AuthController {
     }
 
     @GetMapping("/signup")
-    public String signUpPage(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signUpForm(@ModelAttribute("user") UserRequestDto userRequestDto) {
         return "auth/signup";
     }
 
     @PostMapping("/signup")
-    public String processSignUp(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signUp(@ModelAttribute("user") UserRequestDto userRequestDto) {
         userService.create(userRequestDto);
         return "redirect:/auth/signin";
     }
 
-    @PostMapping("/logout")
-    public String processLogOut(@CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse response) {
+    @PostMapping("/signout")
+    public String signOut(@CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse response) {
         Cookie cookie = new Cookie("sessionid", null);
 
         cookie.setHttpOnly(true);

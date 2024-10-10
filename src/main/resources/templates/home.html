@@ -12,11 +12,18 @@
 <div th:if="${authenticated}">
     <p th:text="${user.username}" />
 
-    <form th:action="@{/auth/logout}" method="post">
-        <button type="submit">Logout</button>
+    <form th:action="@{/auth/signout}" method="post">
+        <button type="submit">Sign out</button>
     </form>
 
-    <h2>Your Locations</h2>
+    <br>
+
+    <form action="/locations" method="get">
+        <label>
+            <input type="text" name="name" placeholder="Enter location" required>
+        </label>
+        <button type="submit">Search</button>
+    </form>
 </div>
 
 <div th:if="${!authenticated}">
