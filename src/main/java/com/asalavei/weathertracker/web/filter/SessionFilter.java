@@ -1,5 +1,6 @@
 package com.asalavei.weathertracker.web.filter;
 
+import com.asalavei.weathertracker.dbaccess.entity.User;
 import com.asalavei.weathertracker.service.SessionService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
@@ -24,19 +25,33 @@ public class SessionFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+        if (req.getRequestURI().startsWith("/auth/")) {
+            chain.doFilter(req, res);
+            return;
+        }
+
         Cookie[] cookies = req.getCookies();
 
-        if (cookies != null) {
-            String sessionId = Arrays.stream(cookies)
-                    .filter(cookie -> "sessionid".equals(cookie.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
+        if (cookies == null) {
+            res.sendRedirect("/auth/signin");
+            return;
+        }
 
-            if (sessionId == null || !sessionService.isSessionValid(sessionId)) {
-                res.sendRedirect("/auth/signin");
-                return;
-            }
+        String sessionId = Arrays.stream(cookies)
+                .filter(cookie -> "sessionid".equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+
+        if (sessionId == null || !sessionService.isSessionValid(sessionId)) {
+            res.sendRedirect("/auth/signin");
+            return;
+        }
+
+        User user = sessionService.getUserById(sessionId);
+
+        if (user != null) {
+            req.setAttribute("authenticatedUser", user);
         }
 
         chain.doFilter(req, res);
