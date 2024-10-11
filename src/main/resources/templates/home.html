@@ -24,6 +24,23 @@
         </label>
         <button type="submit">Search</button>
     </form>
+
+    <div th:if="${locations != null and !#lists.isEmpty(locations)}">
+        <h3>Locations:</h3>
+        <ul>
+            <li th:each="location : ${locations}">
+                <h2 th:text="${location.name}"></h2>
+                <img th:src="'https://openweathermap.org/img/wn/' + ${location.conditions[0].icon} + '@2x.png'"
+                     alt="Weather icon" />
+                <p th:text="'Condition: ' + ${location.conditions[0].main}"></p>
+                <p th:text="'Details: ' + ${location.conditions[0].description}"></p>
+                <p th:text="'Temperature: ' + ${location.temperatureInfo.temperature} + ' °C'"></p>
+                <p th:text="'Feels like: ' + ${location.temperatureInfo.feelsLike} + ' °C'"></p>
+                <p th:text="'Country: ' + ${location.locationInfo.country}"></p>
+            </li>
+        </ul>
+    </div>
+
 </div>
 
 <div th:if="${!authenticated}">

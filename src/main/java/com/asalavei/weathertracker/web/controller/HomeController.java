@@ -30,7 +30,7 @@ public class HomeController {
         if (user != null) {
             model.addAttribute("authenticated", true);
             model.addAttribute("user", userMapper.toDto(user));
-//                model.addAttribute("locations", locationService.getByUserId(user.getId()));
+            model.addAttribute("locations", weatherService.getUserLocationsWeather(user.getId()));
         } else {
             model.addAttribute("authenticated", false);
         }
