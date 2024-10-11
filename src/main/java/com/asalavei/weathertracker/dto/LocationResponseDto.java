@@ -1,11 +1,13 @@
 package com.asalavei.weathertracker.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocationResponseDto {
 
     private String name;
@@ -17,4 +19,6 @@ public class LocationResponseDto {
 
     @JsonProperty("lon")
     private BigDecimal longitude;
+
+    private String state;
 }
