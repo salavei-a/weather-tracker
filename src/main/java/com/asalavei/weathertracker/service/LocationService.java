@@ -7,6 +7,8 @@ import com.asalavei.weathertracker.dto.LocationRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LocationService {
 
@@ -30,5 +32,9 @@ public class LocationService {
 
     private Location save(Location location) {
         return locationRepository.save(location);
+    }
+
+    public List<Location> findAllByUserId(Long userId) {
+        return locationRepository.findAllByUserId(userId);
     }
 }
