@@ -22,7 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public RestClient restClient() {
-        return RestClient.create();
+        return RestClient.builder()
+                .baseUrl("https://api.openweathermap.org")
+                .build();
     }
 
     @Bean

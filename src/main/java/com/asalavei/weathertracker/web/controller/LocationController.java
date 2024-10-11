@@ -46,7 +46,7 @@ public class LocationController {
             return "locations";
         }
 
-        List<LocationResponseDto> locations = weatherService.getLocationDetails(location.getName());
+        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(location.getName());
 
         model.addAttribute("locations", locations);
 
