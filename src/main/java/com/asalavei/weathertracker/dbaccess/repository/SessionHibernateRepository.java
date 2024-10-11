@@ -11,23 +11,19 @@ public class SessionHibernateRepository extends BaseHibernateRepository<Session>
 
     @Override
     public Optional<Session> findByIdAndExpiresAtAfter(String id, LocalDateTime expiresAfter) {
-        return executeInTransaction(s -> {
-            Session session = s.createQuery("from Session where id = :id and expiresAt > :expiresAfter", Session.class)
-                    .setParameter("id", id)
-                    .setParameter("expiresAfter", expiresAfter)
-                    .uniqueResult();
-            return Optional.ofNullable(session);
-        });
+        return executeInTransaction(s ->
+                Optional.ofNullable(s.createQuery("from Session where id = :id and expiresAt > :expiresAfter", Session.class)
+                        .setParameter("id", id)
+                        .setParameter("expiresAfter", expiresAfter)
+                        .uniqueResult()));
     }
 
     @Override
     public Optional<Session> findById(String id) {
-        return executeInTransaction(s -> {
-            Session session = s.createQuery("from Session where id = :id", Session.class)
-                    .setParameter("id", id)
-                    .uniqueResult();
-            return Optional.ofNullable(session);
-        });
+        return executeInTransaction(s ->
+                Optional.ofNullable(s.createQuery("from Session where id = :id", Session.class)
+                        .setParameter("id", id)
+                        .uniqueResult()));
     }
 
     @Override
