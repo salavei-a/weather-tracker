@@ -16,4 +16,13 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
                         .getResultList()
         );
     }
+
+    @Override
+    public void deleteByNameAndUserId(String name, Long userId) {
+        executeInTransaction(s ->
+                s.createQuery("delete from Location where name = :name and user.id = :userId")
+                        .setParameter("name", name)
+                        .setParameter("userId", userId)
+                        .executeUpdate());
+    }
 }

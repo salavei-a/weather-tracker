@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,6 +59,19 @@ public class LocationController {
         }
 
         locationService.create(locationRequest, user);
+
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/delete")
+    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest, HttpServletRequest req) {
+        User user = (User) req.getAttribute("authenticatedUser");
+
+        if (user == null) {
+            return "redirect:/auth/signin";
+        }
+
+        locationService.deleteByNameAndUserId(locationRequest.getName(), user.getId());
 
         return "redirect:/";
     }

@@ -37,4 +37,8 @@ public class LocationService {
     public List<Location> findAllByUserId(Long userId) {
         return locationRepository.findAllByUserId(userId);
     }
+
+    public void deleteByNameAndUserId(String name, Long userId) {
+        locationRepository.deleteByNameAndUserId(name, userId);
+    }
 }

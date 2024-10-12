@@ -37,6 +37,12 @@
                 <p th:text="'Temperature: ' + ${location.temperatureInfo.temperature} + ' °C'"></p>
                 <p th:text="'Feels like: ' + ${location.temperatureInfo.feelsLike} + ' °C'"></p>
                 <p th:text="'Country: ' + ${location.locationInfo.country}"></p>
+
+                <form th:action="@{/locations/delete}" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <input type="hidden" th:name="name" th:value="${location.name}"/>
+                    <button type="submit">Delete</button>
+                </form>
             </li>
         </ul>
     </div>
