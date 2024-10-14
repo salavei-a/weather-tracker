@@ -29,12 +29,12 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     protected Filter[] getServletFilters() {
         HiddenHttpMethodFilter hiddenHttpMethodFilter = new HiddenHttpMethodFilter();
 
-        DelegatingFilterProxy sessionFilterProxy = new DelegatingFilterProxy("sessionFilter");
-        sessionFilterProxy.setTargetFilterLifecycle(true);
+        DelegatingFilterProxy authenticationFilter = new DelegatingFilterProxy("authenticationFilter");
+        authenticationFilter.setTargetFilterLifecycle(true);
 
         return new Filter[]{
                 hiddenHttpMethodFilter,
-                sessionFilterProxy
+                authenticationFilter
         };
     }
 }

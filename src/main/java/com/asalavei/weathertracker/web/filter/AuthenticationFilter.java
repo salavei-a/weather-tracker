@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Arrays;
 
-@Component("sessionFilter")
-public class SessionFilter extends HttpFilter {
+@Component("authenticationFilter")
+public class AuthenticationFilter extends HttpFilter {
 
     private final SessionService sessionService;
 
     @Autowired
-    public SessionFilter(SessionService sessionService) {
+    public AuthenticationFilter(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
