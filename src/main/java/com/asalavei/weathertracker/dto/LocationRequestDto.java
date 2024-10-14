@@ -1,6 +1,7 @@
 package com.asalavei.weathertracker.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LocationRequestDto {
 
+    @NotBlank
     private String name;
 
     private BigDecimal latitude;

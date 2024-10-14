@@ -8,8 +8,10 @@ import com.asalavei.weathertracker.service.UserService;
 import com.asalavei.weathertracker.dto.UserRequestDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -33,7 +35,11 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public String signIn(@ModelAttribute("user") UserRequestDto userRequestDto, HttpServletResponse response) {
+    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult, HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            return "auth/signin";
+        }
+
         User user = authenticationService.authenticate(userRequestDto);
         Session session = sessionService.create(user);
         Cookie cookie = new Cookie("sessionid", session.getId());
@@ -53,7 +59,11 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signUp(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "auth/signup";
+        }
+
         userService.create(userRequestDto);
         return "redirect:/auth/signin";
     }

@@ -7,10 +7,11 @@ import com.asalavei.weathertracker.mapper.UserMapper;
 import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.LocationService;
 import com.asalavei.weathertracker.service.WeatherService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,12 +32,11 @@ public class LocationController {
     }
 
     @GetMapping
-    public String search(@ModelAttribute("location") LocationRequestDto location, HttpServletRequest req, Model model) {
+    public String search(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult, Model model) {
         User user = SecurityContext.getAuthenticatedUser();
-
         model.addAttribute("user", userMapper.toDto(user));
 
-        if (location.getName() == null) {
+        if (bindingResult.hasErrors()) {
             return "locations";
         }
 

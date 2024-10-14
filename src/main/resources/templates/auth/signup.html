@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
+    <style>
+        .error {
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
 
-<form th:method="post" th:action="@{/auth/signup}" th:object="${user}">
+<form th:action="@{/auth/signup}" th:object="${user}" th:method="post">
     <label for="username">Username</label>
-    <input type="text" th:field="*{username}" id="username"/>
+    <input type="text" th:field="*{username}" id="username" required/>
+    <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
 
     <br/>
 
     <label for="password">Password</label>
-    <input type="password" th:field="*{password}" id="password"/>
+    <input type="password" th:field="*{password}" id="password" required/>
+    <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
 
     <br/>
 
