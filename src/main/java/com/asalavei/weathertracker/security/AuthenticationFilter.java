@@ -1,6 +1,5 @@
-package com.asalavei.weathertracker.web.filter;
+package com.asalavei.weathertracker.security;
 
-import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.SessionService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;

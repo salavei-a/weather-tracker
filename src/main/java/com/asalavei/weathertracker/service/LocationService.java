@@ -1,8 +1,8 @@
 package com.asalavei.weathertracker.service;
 
-import com.asalavei.weathertracker.dbaccess.entity.Location;
-import com.asalavei.weathertracker.dbaccess.entity.User;
-import com.asalavei.weathertracker.dbaccess.repository.LocationRepository;
+import com.asalavei.weathertracker.entity.Location;
+import com.asalavei.weathertracker.entity.User;
+import com.asalavei.weathertracker.repository.LocationRepository;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

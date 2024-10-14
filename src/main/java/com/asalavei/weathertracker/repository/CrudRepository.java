@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.dbaccess.repository;
+package com.asalavei.weathertracker.repository;
 
 public interface CrudRepository<T> {
     T save(T entity);

@@ -1,6 +1,6 @@
-package com.asalavei.weathertracker.dbaccess.repository;
+package com.asalavei.weathertracker.repository;
 
-import com.asalavei.weathertracker.dbaccess.entity.Session;
+import com.asalavei.weathertracker.entity.Session;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

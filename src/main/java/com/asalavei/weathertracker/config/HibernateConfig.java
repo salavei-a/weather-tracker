@@ -1,8 +1,8 @@
-package com.asalavei.weathertracker.dbaccess.config;
+package com.asalavei.weathertracker.config;
 
-import com.asalavei.weathertracker.dbaccess.entity.Location;
-import com.asalavei.weathertracker.dbaccess.entity.Session;
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.Location;
+import com.asalavei.weathertracker.entity.Session;
+import com.asalavei.weathertracker.entity.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
-package com.asalavei.weathertracker.dbaccess.repository;
+package com.asalavei.weathertracker.repository;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.User;
 
 import java.util.Optional;
 

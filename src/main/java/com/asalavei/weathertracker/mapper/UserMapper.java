@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.mapper;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.dto.UserResponseDto;
 import com.asalavei.weathertracker.dto.UserRequestDto;
 import org.mapstruct.Mapper;

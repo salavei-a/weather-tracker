@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.dbaccess.entity;
+package com.asalavei.weathertracker.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

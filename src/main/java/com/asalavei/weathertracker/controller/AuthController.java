@@ -1,7 +1,7 @@
-package com.asalavei.weathertracker.web.controller;
+package com.asalavei.weathertracker.controller;
 
-import com.asalavei.weathertracker.dbaccess.entity.Session;
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.Session;
+import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.service.AuthenticationService;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;

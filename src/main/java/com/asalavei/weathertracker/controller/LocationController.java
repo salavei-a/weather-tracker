@@ -1,6 +1,6 @@
-package com.asalavei.weathertracker.web.controller;
+package com.asalavei.weathertracker.controller;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
 import com.asalavei.weathertracker.mapper.UserMapper;

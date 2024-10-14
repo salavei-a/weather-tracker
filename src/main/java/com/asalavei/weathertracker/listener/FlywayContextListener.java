@@ -1,6 +1,6 @@
-package com.asalavei.weathertracker.web.listener;
+package com.asalavei.weathertracker.listener;
 
-import com.asalavei.weathertracker.dbaccess.config.HibernateConfig;
+import com.asalavei.weathertracker.config.HibernateConfig;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;

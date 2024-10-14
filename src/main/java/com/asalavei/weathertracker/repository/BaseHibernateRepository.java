@@ -1,6 +1,6 @@
-package com.asalavei.weathertracker.dbaccess.repository;
+package com.asalavei.weathertracker.repository;
 
-import com.asalavei.weathertracker.dbaccess.config.HibernateConfig;
+import com.asalavei.weathertracker.config.HibernateConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,8 +1,8 @@
 package com.asalavei.weathertracker.service;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
-import com.asalavei.weathertracker.dbaccess.entity.Session;
-import com.asalavei.weathertracker.dbaccess.repository.SessionRepository;
+import com.asalavei.weathertracker.entity.User;
+import com.asalavei.weathertracker.entity.Session;
+import com.asalavei.weathertracker.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class SessionService {
         return sessionRepository.findById(id)
                 .map(Session::getUser)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
-        // TODO: custom exception
+        // TODO: custom exception, thinking about Optional/Exception
     }
 
     public void invalidate(String id) {

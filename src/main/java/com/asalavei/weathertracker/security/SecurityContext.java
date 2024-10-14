@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.security;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.entity.User;
 
 /**
  * Stored authenticated user for the current request
