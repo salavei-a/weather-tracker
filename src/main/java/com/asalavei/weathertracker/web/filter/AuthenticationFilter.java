@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.web.filter;
 
-import com.asalavei.weathertracker.dbaccess.entity.User;
+import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.SessionService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
@@ -48,12 +48,12 @@ public class AuthenticationFilter extends HttpFilter {
             return;
         }
 
-        User user = sessionService.getUserById(sessionId);
+        SecurityContext.setAuthenticatedUser(sessionService.getUserById(sessionId));
 
-        if (user != null) {
-            req.setAttribute("authenticatedUser", user);
+        try {
+            chain.doFilter(req, res);
+        } finally {
+            SecurityContext.clear();
         }
-
-        chain.doFilter(req, res);
     }
 }

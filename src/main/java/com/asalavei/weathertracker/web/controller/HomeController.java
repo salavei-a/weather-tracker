@@ -2,8 +2,8 @@ package com.asalavei.weathertracker.web.controller;
 
 import com.asalavei.weathertracker.dbaccess.entity.User;
 import com.asalavei.weathertracker.mapper.UserMapper;
+import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.WeatherService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +24,12 @@ public class HomeController {
     }
 
     @GetMapping
-    public String homePage(Model model, HttpServletRequest req) {
-        User user = (User) req.getAttribute("authenticatedUser");
+    public String homePage(Model model) {
+        User user = SecurityContext.getAuthenticatedUser();
 
         if (user != null) {
-            model.addAttribute("authenticated", true);
             model.addAttribute("user", userMapper.toDto(user));
             model.addAttribute("locations", weatherService.getUserLocationsWeather(user.getId()));
-        } else {
-            model.addAttribute("authenticated", false);
         }
 
         return "home";

@@ -4,6 +4,7 @@ import com.asalavei.weathertracker.dbaccess.entity.User;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
 import com.asalavei.weathertracker.mapper.UserMapper;
+import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.LocationService;
 import com.asalavei.weathertracker.service.WeatherService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,11 +32,7 @@ public class LocationController {
 
     @GetMapping
     public String search(@ModelAttribute("location") LocationRequestDto location, HttpServletRequest req, Model model) {
-        User user = (User) req.getAttribute("authenticatedUser");
-
-        if (user == null) {
-            return "redirect:/auth/signin";
-        }
+        User user = SecurityContext.getAuthenticatedUser();
 
         model.addAttribute("user", userMapper.toDto(user));
 
@@ -51,12 +48,8 @@ public class LocationController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("location") LocationRequestDto locationRequest, HttpServletRequest req) {
-        User user = (User) req.getAttribute("authenticatedUser");
-
-        if (user == null) {
-            return "redirect:/auth/signin";
-        }
+    public String add(@ModelAttribute("location") LocationRequestDto locationRequest) {
+        User user = SecurityContext.getAuthenticatedUser();
 
         locationService.create(locationRequest, user);
 
@@ -64,12 +57,8 @@ public class LocationController {
     }
 
     @DeleteMapping("/delete")
-    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest, HttpServletRequest req) {
-        User user = (User) req.getAttribute("authenticatedUser");
-
-        if (user == null) {
-            return "redirect:/auth/signin";
-        }
+    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest) {
+        User user = SecurityContext.getAuthenticatedUser();
 
         locationService.deleteByNameAndUserId(locationRequest.getName(), user.getId());
 
