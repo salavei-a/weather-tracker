@@ -2,6 +2,7 @@ package com.asalavei.weathertracker.service;
 
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.entity.Session;
+import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,7 @@ public class SessionService {
     public User getUserById(String id) {
         return sessionRepository.findById(id)
                 .map(Session::getUser)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
-        // TODO: custom exception, thinking about Optional/Exception
+                .orElseThrow(() -> new NotFoundException("Session with ID '" + id + "' not found"));
     }
 
     public void invalidate(String id) {

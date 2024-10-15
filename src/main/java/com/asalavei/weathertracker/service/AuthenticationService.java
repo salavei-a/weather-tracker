@@ -2,9 +2,13 @@ package com.asalavei.weathertracker.service;
 
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.exception.AuthenticationException;
+import com.asalavei.weathertracker.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AuthenticationService {
 
@@ -15,15 +19,17 @@ public class AuthenticationService {
         this.userService = userService;
     }
 
-
     public User authenticate(UserRequestDto userRequestDto) {
-        User user = userService.getByUsername(userRequestDto.getUsername());
+        try {
+            User user = userService.getByUsername(userRequestDto.getUsername());
 
-        if (user.getPassword().equals(userRequestDto.getPassword())) {
-            return user;
+            if (user.getPassword().equals(userRequestDto.getPassword())) {
+                return user;
+            }
+        } catch (NotFoundException ignored) {
+            // Ignored as part of authentication flow
         }
 
-        throw new RuntimeException("Password incorrect");
-        // TODO: custom exception AuthenticationException
+        throw new AuthenticationException("Invalid username or password");
     }
 }
