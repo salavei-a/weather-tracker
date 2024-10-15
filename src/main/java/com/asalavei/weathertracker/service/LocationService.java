@@ -19,7 +19,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public void create(LocationRequestDto locationRequest, User user) {
+    public Location create(LocationRequestDto locationRequest, User user) {
         Location location = Location.builder()
                 .name(locationRequest.getName())
                 .user(user)
@@ -27,7 +27,7 @@ public class LocationService {
                 .longitude(locationRequest.getLongitude())
                 .build();
 
-        save(location);
+        return save(location);
     }
 
     private Location save(Location location) {
