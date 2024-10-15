@@ -3,6 +3,7 @@ package com.asalavei.weathertracker.config;
 import com.asalavei.weathertracker.entity.Location;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.entity.User;
+import com.asalavei.weathertracker.exception.AppRuntimeException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class HibernateConfig {
     private static final SessionFactory sessionFactory = buildSessionFactory();
     private static final HikariDataSource hikariDataSource = buildDataSource();
 
+    private static final String HIBERNATE_PROPERTIES_FILE = "hibernate.properties";
     private static final String DB_URL = "jdbc:postgresql://localhost:4681/weather_tracker";
     private static final String DB_USER = "admin";
     private static final String DB_PASSWORD = "admin";
@@ -31,16 +33,14 @@ public class HibernateConfig {
     private static Properties configureProperties() {
         Properties properties = new Properties();
 
-        try (InputStream inputStream = HibernateConfig.class.getClassLoader().getResourceAsStream("hibernate.properties")) {
+        try (InputStream inputStream = HibernateConfig.class.getClassLoader().getResourceAsStream(HIBERNATE_PROPERTIES_FILE)) {
             if (inputStream == null) {
-                throw new RuntimeException("Configuration file 'hibernate.properties' not found in the classpath");
-                // TODO: handle custom exception
+                throw new AppRuntimeException(String.format("Configuration file '%s' not found in the classpath", HIBERNATE_PROPERTIES_FILE));
             }
 
             properties.load(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load 'hibernate.properties'", e);
-            // TODO: handle custom exception
+            throw new AppRuntimeException(String.format("Failed to load '%s'", HIBERNATE_PROPERTIES_FILE), e);
         }
 
         properties.setProperty("hibernate.connection.url", getEnvOrDefault("POSTGRES_URL", DB_URL));
@@ -94,12 +94,12 @@ public class HibernateConfig {
     }
 
     public static void shutdown() {
-        if (sessionFactory != null && !sessionFactory.isClosed()) {
+        if (!sessionFactory.isClosed()) {
             sessionFactory.close();
             log.info("Hibernate SessionFactory closed successfully");
         }
 
-        if (sessionFactory != null && !hikariDataSource.isClosed()) {
+        if (!hikariDataSource.isClosed()) {
             hikariDataSource.close();
             log.info("HikariDataSource closed successfully");
         }
