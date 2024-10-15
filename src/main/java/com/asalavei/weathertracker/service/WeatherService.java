@@ -12,4 +12,6 @@ public interface WeatherService {
     List<LocationResponseDto> fetchLocationDetails(String locationName);
 
     CurrentWeatherDto fetchWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude);
+
+    boolean isWeatherDataAvailable(BigDecimal latitude, BigDecimal longitude);
 }

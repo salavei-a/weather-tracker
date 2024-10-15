@@ -31,7 +31,6 @@ public class OpenWeatherService implements WeatherService {
 
     private static final String CLIENT_ERROR = "Client error occurred";
     private static final String SERVER_ERROR = "Server error occurred";
-    private static final String CLIENT_ERROR_MESSAGE = "Failed to fetch weather data due to client error";
     private static final String SERVER_ERROR_MESSAGE = "Failed to fetch weather data due to server error";
 
     private final RestClient restClient;
@@ -41,6 +40,20 @@ public class OpenWeatherService implements WeatherService {
     public OpenWeatherService(RestClient restClient, LocationService locationService) {
         this.restClient = restClient;
         this.locationService = locationService;
+    }
+
+    @Override
+    public boolean isWeatherDataAvailable(BigDecimal latitude, BigDecimal longitude) {
+        try {
+            fetchWeatherByCoordinates(latitude, longitude);
+        } catch (WeatherServiceException e) {
+            return false;
+        } catch (Exception e) {
+            log.error("Unexpected error occurred while checking location. latitude: {}, longitude: {}.", latitude, longitude, e);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -70,7 +83,7 @@ public class OpenWeatherService implements WeatherService {
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
                     logRequest(req);
                     logResponseBody(CLIENT_ERROR, res);
-                    throw new WeatherServiceException(CLIENT_ERROR_MESSAGE);
+                    throw new WeatherServiceException("No location details available for the given location name");
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                     logRequest(req);
@@ -94,7 +107,7 @@ public class OpenWeatherService implements WeatherService {
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
                     logRequest(req);
                     logResponseBody(CLIENT_ERROR, res);
-                    throw new WeatherServiceException(CLIENT_ERROR_MESSAGE);
+                    throw new WeatherServiceException("Weather data not available for the given coordinates");
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                     logRequest(req);
