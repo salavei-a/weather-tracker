@@ -1,10 +1,14 @@
 package com.asalavei.weathertracker.repository;
 
 import com.asalavei.weathertracker.config.HibernateConfig;
+import com.asalavei.weathertracker.exception.AlreadyExistsException;
+import com.asalavei.weathertracker.exception.DatabaseOperationException;
+import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.function.Function;
 
@@ -33,10 +37,17 @@ public class BaseHibernateRepository<T> implements CrudRepository<T> {
             transaction.commit();
 
             return result;
+        } catch (PersistenceException e) {
+            rollbackTransaction(transaction);
+
+            if (e instanceof ConstraintViolationException) {
+                throw new AlreadyExistsException("Entity already exists", e);
+            }
+
+            throw new DatabaseOperationException("Database operation failed", e);
         } catch (Exception e) {
             rollbackTransaction(transaction);
-            throw e;
-            // TODO: handle custom exception
+            throw new DatabaseOperationException("Unexpected database operation error", e);
         }
     }
 
