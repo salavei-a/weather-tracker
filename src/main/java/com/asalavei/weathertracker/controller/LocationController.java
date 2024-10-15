@@ -8,14 +8,17 @@ import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.LocationService;
 import com.asalavei.weathertracker.service.WeatherService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/locations")
 public class LocationController {
@@ -50,6 +53,15 @@ public class LocationController {
     @PostMapping("/add")
     public String add(@ModelAttribute("location") LocationRequestDto locationRequest) {
         User user = SecurityContext.getAuthenticatedUser();
+
+        BigDecimal latitude = locationRequest.getLatitude();
+        BigDecimal longitude = locationRequest.getLongitude();
+
+        if (!weatherService.isWeatherDataAvailable(latitude, longitude)) {
+            log.warn("Attempt to add non-existent location by user: {}. Location details: name: {}, latitude: {}, longitude: {}",
+                    user.getUsername(), locationRequest.getName(), latitude, longitude);
+            return "redirect:/";
+        }
 
         locationService.create(locationRequest, user);
 
