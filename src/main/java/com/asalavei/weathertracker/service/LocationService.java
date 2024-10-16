@@ -38,7 +38,11 @@ public class LocationService {
         return locationRepository.findAllByUserId(userId);
     }
 
-    public void deleteByNameAndUserId(String name, Long userId) {
-        locationRepository.deleteByNameAndUserId(name, userId);
+    public void delete(LocationRequestDto locationRequest, Long userId) {
+        locationRepository.deleteByNameAndLatitudeAndLongitudeAndUserId(
+                locationRequest.getName(),
+                locationRequest.getLatitude(),
+                locationRequest.getLongitude(),
+                userId);
     }
 }

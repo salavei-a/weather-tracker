@@ -83,6 +83,9 @@ public class LocationController {
             return "redirect:/";
         }
 
+        locationService.delete(locationRequest, user.getId());
+
+        return "redirect:/";
     }
 
     private void logBindingResultErrors(String action, BindingResult bindingResult, String username) {

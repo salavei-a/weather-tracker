@@ -62,8 +62,13 @@ public class OpenWeatherService implements WeatherService {
 
         return userLocations.stream()
                 .map(location -> {
-                    CurrentWeatherDto currentWeather = fetchWeatherByCoordinates(location.getLatitude(), location.getLongitude());
+                    BigDecimal latitude = location.getLatitude();
+                    BigDecimal longitude = location.getLongitude();
+
+                    CurrentWeatherDto currentWeather = fetchWeatherByCoordinates(latitude, longitude);
                     currentWeather.setName(location.getName());
+                    currentWeather.getLocationInfo().setLatitude(latitude);
+                    currentWeather.getLocationInfo().setLongitude(longitude);
                     return currentWeather;
                 })
                 .map(this::roundTemperatures)

@@ -42,6 +42,8 @@
                 <form th:action="@{/locations/delete}" method="post">
                     <input type="hidden" name="_method" value="delete"/>
                     <input type="hidden" th:name="name" th:value="${location.name}"/>
+                    <input type="hidden" th:name="latitude" th:value="${location.locationInfo.latitude}"/>
+                    <input type="hidden" th:name="longitude" th:value="${location.locationInfo.longitude}"/>
                     <button type="submit">Delete</button>
                 </form>
             </li>
