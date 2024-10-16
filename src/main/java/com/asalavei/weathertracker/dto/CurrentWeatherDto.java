@@ -46,5 +46,9 @@ public class CurrentWeatherDto {
     public static class LocationInfo {
 
         private String country;
+
+        private BigDecimal latitude;
+
+        private BigDecimal longitude;
     }
 }
