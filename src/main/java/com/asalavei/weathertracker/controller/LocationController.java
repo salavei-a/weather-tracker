@@ -36,12 +36,12 @@ public class LocationController {
 
     @GetMapping
     public String search(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult, Model model) {
-        User user = SecurityContext.getAuthenticatedUser();
-        model.addAttribute("user", userMapper.toDto(user));
-
         if (bindingResult.hasErrors()) {
             return "locations";
         }
+
+        User user = SecurityContext.getAuthenticatedUser();
+        model.addAttribute("user", userMapper.toDto(user));
 
         List<LocationResponseDto> locations = weatherService.fetchLocationDetails(location.getName());
 
@@ -51,14 +51,20 @@ public class LocationController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("location") LocationRequestDto locationRequest) {
+    public String add(@ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
+
+        if (bindingResult.hasErrors()) {
+            logBindingResultErrors("add", bindingResult, user.getUsername());
+            return "redirect:/";
+        }
 
         BigDecimal latitude = locationRequest.getLatitude();
         BigDecimal longitude = locationRequest.getLongitude();
 
         if (!weatherService.isWeatherDataAvailable(latitude, longitude)) {
-            log.warn("Attempt to add non-existent location by user: {}. Location details: name: {}, latitude: {}, longitude: {}",
+            log.warn("Attempt to add non-existent location by user: {}. " +
+                     "Potentially manipulated location details: name: {}, latitude: {}, longitude: {}",
                     user.getUsername(), locationRequest.getName(), latitude, longitude);
             return "redirect:/";
         }
@@ -69,11 +75,26 @@ public class LocationController {
     }
 
     @DeleteMapping("/delete")
-    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest) {
+    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
-        locationService.deleteByNameAndUserId(locationRequest.getName(), user.getId());
+        if (bindingResult.hasErrors()) {
+            logBindingResultErrors("delete", bindingResult, user.getUsername());
+            return "redirect:/";
+        }
 
-        return "redirect:/";
+    }
+
+    private void logBindingResultErrors(String action, BindingResult bindingResult, String username) {
+        String errorMessages = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> String.format("Field: %s, Rejected value: %s, Message: %s",
+                        fieldError.getField(),
+                        fieldError.getRejectedValue(),
+                        fieldError.getDefaultMessage()))
+                .reduce((msg1, msg2) -> msg1 + "; " + msg2)
+                .orElse("Unknown validation error");
+
+        log.warn("Attempt to {} location failed due to potentially manipulated input by user: {}. Errors: {}",
+                action, username, errorMessages);
     }
 }
