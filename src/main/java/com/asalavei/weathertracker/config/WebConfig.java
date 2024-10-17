@@ -1,11 +1,14 @@
 package com.asalavei.weathertracker.config;
 
+import com.asalavei.weathertracker.security.AuthenticationInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
@@ -19,6 +22,19 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.asalavei.weathertracker")
 public class WebConfig implements WebMvcConfigurer {
+
+    private final AuthenticationInterceptor authenticationInterceptor;
+
+    @Autowired
+    public WebConfig(AuthenticationInterceptor authenticationInterceptor) {
+        this.authenticationInterceptor = authenticationInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor)
+                .excludePathPatterns("/auth/**", "/error/**");
+    }
 
     @Bean
     public RestClient restClient() {

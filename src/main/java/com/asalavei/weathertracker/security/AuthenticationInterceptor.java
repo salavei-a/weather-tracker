@@ -1,39 +1,32 @@
 package com.asalavei.weathertracker.security;
 
 import com.asalavei.weathertracker.service.SessionService;
-import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.io.IOException;
 import java.util.Arrays;
 
-@Component("authenticationFilter")
-public class AuthenticationFilter extends HttpFilter {
+@Component
+public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final SessionService sessionService;
 
     @Autowired
-    public AuthenticationFilter(SessionService sessionService) {
+    public AuthenticationInterceptor(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
     @Override
-    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        if (req.getRequestURI().startsWith("/auth/")) {
-            chain.doFilter(req, res);
-            return;
-        }
-
+    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
         Cookie[] cookies = req.getCookies();
 
         if (cookies == null) {
             res.sendRedirect("/auth/signin");
-            return;
+            return false;
         }
 
         String sessionId = Arrays.stream(cookies)
@@ -44,15 +37,16 @@ public class AuthenticationFilter extends HttpFilter {
 
         if (sessionId == null || !sessionService.isSessionValid(sessionId)) {
             res.sendRedirect("/auth/signin");
-            return;
+            return false;
         }
 
         SecurityContext.setAuthenticatedUser(sessionService.getUserById(sessionId));
 
-        try {
-            chain.doFilter(req, res);
-        } finally {
-            SecurityContext.clear();
-        }
+        return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception ex) {
+        SecurityContext.clear();
     }
 }

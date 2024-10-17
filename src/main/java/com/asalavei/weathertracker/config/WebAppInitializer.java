@@ -1,7 +1,6 @@
 package com.asalavei.weathertracker.config;
 
 import jakarta.servlet.Filter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -28,13 +27,8 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     @Override
     protected Filter[] getServletFilters() {
         HiddenHttpMethodFilter hiddenHttpMethodFilter = new HiddenHttpMethodFilter();
-
-        DelegatingFilterProxy authenticationFilter = new DelegatingFilterProxy("authenticationFilter");
-        authenticationFilter.setTargetFilterLifecycle(true);
-
         return new Filter[]{
-                hiddenHttpMethodFilter,
-                authenticationFilter
+                hiddenHttpMethodFilter
         };
     }
 }
