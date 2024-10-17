@@ -21,11 +21,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
-        Cookie[] cookies = req.getCookies();
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
-            res.sendRedirect("/auth/signin");
+            response.sendRedirect("/auth/signin");
             return false;
         }
 
@@ -36,7 +36,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 .orElse(null);
 
         if (sessionId == null || !sessionService.isSessionValid(sessionId)) {
-            res.sendRedirect("/auth/signin");
+            response.sendRedirect("/auth/signin");
             return false;
         }
 
@@ -46,7 +46,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest req, HttpServletResponse res, Object handler, Exception ex) {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         SecurityContext.clear();
     }
 }

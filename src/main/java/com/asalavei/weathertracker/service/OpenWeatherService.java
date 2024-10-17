@@ -122,8 +122,8 @@ public class OpenWeatherService implements WeatherService {
                 .body(CurrentWeatherDto.class);
     }
 
-    private void logRequest(HttpRequest req) {
-        log.error("Request failed. Method: {}, URI: {}", req.getMethod(), req.getURI());
+    private void logRequest(HttpRequest request) {
+        log.error("Request failed. Method: {}, URI: {}", request.getMethod(), request.getURI());
     }
 
     private void logResponseBody(String errorType, ClientHttpResponse res) throws IOException {
