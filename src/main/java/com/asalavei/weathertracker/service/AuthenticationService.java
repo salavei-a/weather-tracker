@@ -20,16 +20,20 @@ public class AuthenticationService {
     }
 
     public User authenticate(UserRequestDto userRequestDto) {
+        String username = userRequestDto.getUsername();
+
         try {
-            User user = userService.getByUsername(userRequestDto.getUsername());
+            User user = userService.getByUsername(username);
 
             if (user.getPassword().equals(userRequestDto.getPassword())) {
                 return user;
             }
-        } catch (NotFoundException ignored) {
+        } catch (NotFoundException e) {
             // Ignored as part of authentication flow
+            log.info(e.getMessage());
         }
 
+        log.info("Authentication failed for user: '{}'", username);
         throw new AuthenticationException("Invalid username or password");
     }
 }
