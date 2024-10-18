@@ -30,6 +30,6 @@ public class AuthenticationService {
             // Ignored as part of authentication flow
         }
 
-        throw new AuthenticationException("Invalid username or password.");
+        throw new AuthenticationException("Invalid username or password");
     }
 }
