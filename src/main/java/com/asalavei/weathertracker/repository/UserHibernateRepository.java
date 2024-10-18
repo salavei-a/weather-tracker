@@ -15,4 +15,9 @@ public class UserHibernateRepository extends BaseHibernateRepository<User> imple
                         .setParameter("username", username)
                         .uniqueResult()));
     }
+
+    @Override
+    protected String getAlreadyExistsMessage(User user) {
+        return "Username '" + user.getUsername() + "' is already taken";
+    }
 }

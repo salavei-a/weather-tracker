@@ -19,10 +19,16 @@ public class BaseHibernateRepository<T> implements CrudRepository<T> {
 
     @Override
     public T save(T entity) {
-        return executeInTransaction(s -> {
-            s.persist(entity);
-            return entity;
-        });
+        try {
+            return executeInTransaction(s -> {
+                s.persist(entity);
+                return entity;
+            });
+        } catch (AlreadyExistsException e) {
+            String message = getAlreadyExistsMessage(entity);
+            log.debug(message, e);
+            throw new AlreadyExistsException(message);
+        }
     }
 
     protected <R> R executeInTransaction(Function<Session, R> action) {
@@ -41,12 +47,14 @@ public class BaseHibernateRepository<T> implements CrudRepository<T> {
             rollbackTransaction(transaction);
 
             if (e instanceof ConstraintViolationException) {
-                throw new AlreadyExistsException("Entity already exists", e);
+                throw new AlreadyExistsException(e);
             }
 
+            log.error("Persistence exception during transaction", e);
             throw new DatabaseOperationException("Database operation failed", e);
         } catch (Exception e) {
             rollbackTransaction(transaction);
+            log.error("Unexpected error during transaction", e);
             throw new DatabaseOperationException("Unexpected database operation error", e);
         }
     }
@@ -59,5 +67,9 @@ public class BaseHibernateRepository<T> implements CrudRepository<T> {
         } catch (Exception e) {
             log.error("Exception while rolling back transaction", e);
         }
+    }
+
+    protected String getAlreadyExistsMessage(T entity) {
+        return "Entity already exists";
     }
 }
