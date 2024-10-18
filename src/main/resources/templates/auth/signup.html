@@ -26,6 +26,10 @@
         </ul>
     </div>
 
+    <div class="error" th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
     <br/>
 
     <input type="submit" value="Sign up">
