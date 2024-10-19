@@ -1,7 +1,7 @@
 package com.asalavei.weathertracker.config;
 
 import com.asalavei.weathertracker.security.AuthenticationInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +20,11 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
  */
 @Configuration
 @EnableWebMvc
+@RequiredArgsConstructor
 @ComponentScan(basePackages = "com.asalavei.weathertracker")
 public class WebConfig implements WebMvcConfigurer {
 
     private final AuthenticationInterceptor authenticationInterceptor;
-
-    @Autowired
-    public WebConfig(AuthenticationInterceptor authenticationInterceptor) {
-        this.authenticationInterceptor = authenticationInterceptor;
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

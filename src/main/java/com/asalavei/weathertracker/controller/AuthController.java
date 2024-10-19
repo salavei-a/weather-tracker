@@ -9,25 +9,19 @@ import com.asalavei.weathertracker.dto.UserRequestDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
     private final SessionService sessionService;
     private final UserService userService;
     private final AuthenticationService authenticationService;
-
-    @Autowired
-    public AuthController(SessionService sessionService, UserService userService, AuthenticationService authenticationService) {
-        this.sessionService = sessionService;
-        this.userService = userService;
-        this.authenticationService = authenticationService;
-    }
 
     @GetMapping("/signin")
     public String signInForm(@ModelAttribute("user") UserRequestDto userRequestDto) {

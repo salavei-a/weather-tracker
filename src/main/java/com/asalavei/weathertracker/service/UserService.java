@@ -5,20 +5,15 @@ import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.repository.UserRepository;
 import com.asalavei.weathertracker.mapper.UserMapper;
 import com.asalavei.weathertracker.dto.UserRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
     public User create(UserRequestDto userRequest) {
         return save(userMapper.toEntity(userRequest));

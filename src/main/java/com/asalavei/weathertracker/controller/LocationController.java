@@ -8,8 +8,8 @@ import com.asalavei.weathertracker.security.SecurityContext;
 import com.asalavei.weathertracker.service.LocationService;
 import com.asalavei.weathertracker.service.WeatherService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,19 +20,13 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/locations")
 public class LocationController {
 
     private final WeatherService weatherService;
     private final LocationService locationService;
     private final UserMapper userMapper;
-
-    @Autowired
-    public LocationController(WeatherService weatherService, LocationService locationService, UserMapper userMapper) {
-        this.weatherService = weatherService;
-        this.locationService = locationService;
-        this.userMapper = userMapper;
-    }
 
     @GetMapping
     public String search(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult, Model model) {

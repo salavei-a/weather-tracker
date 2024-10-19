@@ -4,20 +4,16 @@ import com.asalavei.weathertracker.entity.Location;
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.repository.LocationRepository;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LocationService {
 
     private final LocationRepository locationRepository;
-
-    @Autowired
-    public LocationService(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
-    }
 
     public Location create(LocationRequestDto locationRequest, User user) {
         Location location = Location.builder()

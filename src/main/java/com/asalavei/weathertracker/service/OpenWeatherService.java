@@ -4,8 +4,8 @@ import com.asalavei.weathertracker.entity.Location;
 import com.asalavei.weathertracker.dto.CurrentWeatherDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
 import com.asalavei.weathertracker.exception.WeatherServiceException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
@@ -22,6 +22,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OpenWeatherService implements WeatherService {
 
     private static final String API_KEY = System.getenv("OPEN_WEATHER_API_KEY");
@@ -35,12 +36,6 @@ public class OpenWeatherService implements WeatherService {
 
     private final RestClient restClient;
     private final LocationService locationService;
-
-    @Autowired
-    public OpenWeatherService(RestClient restClient, LocationService locationService) {
-        this.restClient = restClient;
-        this.locationService = locationService;
-    }
 
     @Override
     public boolean isWeatherDataAvailable(BigDecimal latitude, BigDecimal longitude) {
