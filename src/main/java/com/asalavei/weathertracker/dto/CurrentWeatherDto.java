@@ -25,8 +25,6 @@ public class CurrentWeatherDto {
     @Data
     private static class Condition {
 
-        private String main;
-
         private String description;
 
         private String icon;
@@ -40,6 +38,8 @@ public class CurrentWeatherDto {
 
         @JsonProperty("feels_like")
         private BigDecimal feelsLike;
+
+        private Integer humidity;
     }
 
     @Data
