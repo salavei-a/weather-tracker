@@ -1,9 +1,7 @@
 package com.asalavei.weathertracker.handler;
 
 import com.asalavei.weathertracker.dto.UserRequestDto;
-import com.asalavei.weathertracker.exception.AlreadyExistsException;
-import com.asalavei.weathertracker.exception.AuthenticationException;
-import com.asalavei.weathertracker.exception.DatabaseOperationException;
+import com.asalavei.weathertracker.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,12 +34,17 @@ public class GlobalExceptionHandler {
         return "error/500";
     }
 
-    @ExceptionHandler(AlreadyExistsException.class)
+    @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleAlreadyExistsException(AlreadyExistsException e, Model model) {
+    public String handleUserAlreadyExistsException(UserAlreadyExistsException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         model.addAttribute("user", new UserRequestDto());
         return "auth/signup";
+    }
+
+    @ExceptionHandler(LocationAlreadyExistsException.class)
+    public String handleLocationAlreadyExistsException() {
+        return "redirect:/";
     }
 
     @ExceptionHandler(AuthenticationException.class)
