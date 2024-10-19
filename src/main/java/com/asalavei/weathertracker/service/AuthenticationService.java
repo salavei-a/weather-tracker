@@ -34,6 +34,6 @@ public class AuthenticationService {
         }
 
         log.info("Authentication failed for user: '{}'", username);
-        throw new AuthenticationException("Invalid username or password");
+        throw new AuthenticationException("Incorrect username or password");
     }
 }
