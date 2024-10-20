@@ -30,7 +30,7 @@
                 </div>
                 <div class="error-container">
                     <div class="error" th:if="${#fields.hasAnyErrors()}">
-                        <p>Incorrect username or password</p>
+                        <p th:text="${#strings.arrayJoin(#fields.allErrors(), ', ')}"></p>
                     </div>
                     <div class="error" th:if="${errorMessage}">
                         <p th:text="${errorMessage}"></p>
