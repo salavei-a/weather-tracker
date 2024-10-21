@@ -1,5 +1,6 @@
 package com.asalavei.weathertracker.service;
 
+import com.asalavei.weathertracker.dto.LocationRequestDto;
 import com.asalavei.weathertracker.entity.Location;
 import com.asalavei.weathertracker.dto.CurrentWeatherDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
@@ -38,17 +39,19 @@ public class OpenWeatherService implements WeatherService {
     private final LocationService locationService;
 
     @Override
-    public boolean isWeatherDataAvailable(BigDecimal latitude, BigDecimal longitude) {
+    public boolean locationExists(LocationRequestDto location) {
         try {
-            fetchWeatherByCoordinates(latitude, longitude);
+            return fetchLocationDetails(location.getName()).stream()
+                    .anyMatch(l -> l.getName().equals(location.getName())
+                            && l.getLatitude().compareTo(location.getLatitude()) == 0
+                            && l.getLongitude().compareTo(location.getLongitude()) == 0);
         } catch (WeatherServiceException e) {
             return false;
         } catch (Exception e) {
-            log.error("Unexpected error occurred while checking location. latitude: {}, longitude: {}.", latitude, longitude, e);
+            log.error("Unexpected error occurred while checking location with name={}, latitude={}, longitude={}",
+                    location.getName(), location.getLatitude(), location.getLongitude(), e);
             return false;
         }
-
-        return true;
     }
 
     @Override

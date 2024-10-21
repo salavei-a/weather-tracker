@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -50,7 +49,7 @@ public class LocationController {
     }
 
     @PostMapping("/add")
-    public String add(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String add(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
@@ -58,23 +57,20 @@ public class LocationController {
             return "redirect:/";
         }
 
-        BigDecimal latitude = locationRequest.getLatitude();
-        BigDecimal longitude = locationRequest.getLongitude();
-
-        if (!weatherService.isWeatherDataAvailable(latitude, longitude)) {
-            log.warn("Attempt to add non-existent location by user: {}. " +
-                     "Potentially manipulated location details: name: {}, latitude: {}, longitude: {}",
-                    user.getUsername(), locationRequest.getName(), latitude, longitude);
+        if (!weatherService.locationExists(location)) {
+            log.warn("Attempt to add non-existent location by user={} with potentially manipulated location details. " +
+                     "name={}, latitude={}, longitude={}",
+                    user.getUsername(), location.getName(), location.getLatitude(), location.getLongitude());
             return "redirect:/";
         }
 
-        locationService.create(locationRequest, user);
+        locationService.create(location, user);
 
         return "redirect:/";
     }
 
     @DeleteMapping("/delete")
-    public String delete(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String delete(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
@@ -82,7 +78,7 @@ public class LocationController {
             return "redirect:/";
         }
 
-        locationService.delete(locationRequest, user.getId());
+        locationService.delete(location, user.getId());
 
         return "redirect:/";
     }
