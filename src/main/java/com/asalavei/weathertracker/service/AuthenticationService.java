@@ -16,10 +16,10 @@ public class AuthenticationService {
     private final UserService userService;
 
     public User authenticate(UserRequestDto userRequestDto) {
-        String username = userRequestDto.getUsername();
+        String username = userRequestDto.getUsername().trim().toLowerCase();
 
         try {
-            User user = userService.getByUsername(username);
+            User user = userService.loadUserByUsername(username);
 
             if (user.getPassword().equals(userRequestDto.getPassword())) {
                 return user;
