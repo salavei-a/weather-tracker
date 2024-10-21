@@ -17,7 +17,7 @@ public class UserHibernateRepository extends BaseHibernateRepository<User> imple
         try {
             return super.save(user);
         } catch (AlreadyExistsException e) {
-            log.warn("username={} is already taken", user.getUsername(), e);
+            log.debug("username={} is already taken", user.getUsername(), e);
             throw new UserAlreadyExistsException("Username is already taken");
         }
     }
