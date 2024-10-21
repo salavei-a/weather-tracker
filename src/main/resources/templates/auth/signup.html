@@ -30,7 +30,9 @@
                 </div>
                 <div class="error-container">
                     <div class="error" th:if="${#fields.hasAnyErrors()}">
-                        <p th:text="${#strings.arrayJoin(#fields.allErrors(), ', ')}"></p>
+                        <ul>
+                            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+                        </ul>
                     </div>
                     <div class="error" th:if="${errorMessage}">
                         <p th:text="${errorMessage}"></p>
