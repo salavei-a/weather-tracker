@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 public class UserRequestDto {
 
-    @Pattern(regexp = "^[_.@A-Za-z0-9-]*$", message = "Username can only contain letters, digits, dots (.), underscores (_), at signs (@), and hyphens (-)")
+    @Pattern(regexp = "^\\s*[_.@A-Za-z0-9-]*\\s*$",
+             message = "Username can only contain letters, digits, dots (.), underscores (_), at signs (@), and hyphens (-)")
     @NotEmpty(message = "Username is required")
     @Size(min = 1, max = 39, message = "Username must be between 1 and 39 characters long ")
     private String username;
