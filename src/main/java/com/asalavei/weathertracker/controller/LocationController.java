@@ -1,5 +1,6 @@
 package com.asalavei.weathertracker.controller;
 
+import com.asalavei.weathertracker.dto.LocationSearchRequestDto;
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.dto.LocationRequestDto;
 import com.asalavei.weathertracker.dto.LocationResponseDto;
@@ -24,32 +25,36 @@ import java.util.List;
 @RequestMapping("/locations")
 public class LocationController {
 
+    private static final String SEARCH = "search";
+    private static final String ADD = "add";
+    private static final String DELETE = "delete";
+
     private final WeatherService weatherService;
     private final LocationService locationService;
     private final UserMapper userMapper;
 
     @GetMapping
-    public String search(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "locations";
-        }
-
+    public String search(@Valid @ModelAttribute("location") LocationSearchRequestDto location, BindingResult bindingResult, Model model) {
         User user = SecurityContext.getAuthenticatedUser();
         model.addAttribute("user", userMapper.toDto(user));
 
-        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(location.getName());
+        if (bindingResult.hasErrors()) {
+            logBindingResultErrors(SEARCH, bindingResult, user.getUsername());
+            return "locations";
+        }
 
+        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(location.getName());
         model.addAttribute("locations", locations);
 
         return "locations";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String add(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
-            logBindingResultErrors("add", bindingResult, user.getUsername());
+            logBindingResultErrors(ADD, bindingResult, user.getUsername());
             return "redirect:/";
         }
 
@@ -69,11 +74,11 @@ public class LocationController {
     }
 
     @DeleteMapping("/delete")
-    public String delete(@ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String delete(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
-            logBindingResultErrors("delete", bindingResult, user.getUsername());
+            logBindingResultErrors(DELETE, bindingResult, user.getUsername());
             return "redirect:/";
         }
 
