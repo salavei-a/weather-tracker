@@ -6,6 +6,7 @@ import com.asalavei.weathertracker.exception.AuthenticationException;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,7 +22,7 @@ public class AuthenticationService {
         try {
             User user = userService.loadUserByUsername(username);
 
-            if (user.getPassword().equals(userRequestDto.getPassword())) {
+            if (BCrypt.checkpw(userRequestDto.getPassword(), user.getPassword())) {
                 return user;
             }
         } catch (NotFoundException e) {
