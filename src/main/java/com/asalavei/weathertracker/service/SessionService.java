@@ -20,14 +20,10 @@ public class SessionService {
         Session session = Session.builder()
                 .id(UUID.randomUUID().toString())
                 .user(user)
-                .expiresAt(LocalDateTime.now().plusMinutes(30))
+                .expiresAt(getSessionExpiryTime())
                 .build();
 
         return save(session);
-    }
-
-    private Session save(Session session) {
-        return sessionRepository.save(session);
     }
 
     public User getUserById(String id) {
@@ -36,11 +32,23 @@ public class SessionService {
                 .orElseThrow(() -> new NotFoundException("Session with ID '" + id + "' not found"));
     }
 
+    public void extendSession(String id) {
+        sessionRepository.updateSessionExpiration(id, getSessionExpiryTime());
+    }
+
     public void invalidate(String id) {
-        sessionRepository.updateExpiresAt(id, LocalDateTime.now());
+        sessionRepository.updateSessionExpiration(id, LocalDateTime.now());
     }
 
     public boolean isSessionValid(String id) {
         return sessionRepository.findByIdAndExpiresAtAfter(id, LocalDateTime.now()).isPresent();
+    }
+
+    private LocalDateTime getSessionExpiryTime() {
+        return LocalDateTime.now().plusMinutes(30);
+    }
+
+    private Session save(Session session) {
+        return sessionRepository.save(session);
     }
 }

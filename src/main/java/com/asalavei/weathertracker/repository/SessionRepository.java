@@ -10,5 +10,5 @@ public interface SessionRepository extends CrudRepository<Session> {
 
     Optional<Session> findById(String id);
 
-    void updateExpiresAt(String id, LocalDateTime newExpiresAt);
+    void updateSessionExpiration(String id, LocalDateTime newExpiresAt);
 }

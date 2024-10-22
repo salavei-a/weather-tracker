@@ -27,7 +27,7 @@ public class SessionHibernateRepository extends BaseHibernateRepository<Session>
     }
 
     @Override
-    public void updateExpiresAt(String id, LocalDateTime newExpiresAt) {
+    public void updateSessionExpiration(String id, LocalDateTime newExpiresAt) {
         executeInTransaction(s ->
                 s.createQuery("update Session set expiresAt = :newExpiresAt where id = :sessionId")
                         .setParameter("sessionId", id)

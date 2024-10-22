@@ -23,14 +23,18 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUri = request.getRequestURI();
         Cookie[] cookies = request.getCookies();
+        Cookie sessionCookie = null;
         String sessionId = null;
 
         if (cookies != null) {
-            sessionId = Arrays.stream(cookies)
+            sessionCookie = Arrays.stream(cookies)
                     .filter(cookie -> "sessionid".equals(cookie.getName()))
-                    .map(Cookie::getValue)
                     .findFirst()
                     .orElse(null);
+
+            if (sessionCookie != null) {
+                sessionId = sessionCookie.getValue();
+            }
         }
 
         boolean isSessionValid = sessionId != null && sessionService.isSessionValid(sessionId);
@@ -49,6 +53,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        sessionService.extendSession(sessionId);
+        extendCookie(sessionCookie, response);
+
         // TODO: avoid User with password
         // TODO: add logging?
         SecurityContext.setAuthenticatedUser(sessionService.getUserById(sessionId));
@@ -58,5 +65,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         SecurityContext.clear();
+    }
+
+    private void extendCookie(Cookie cookie, HttpServletResponse response) {
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(30 * 60);
+        response.addCookie(cookie);
     }
 }
