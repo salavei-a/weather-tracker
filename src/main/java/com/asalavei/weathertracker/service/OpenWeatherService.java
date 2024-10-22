@@ -40,11 +40,13 @@ public class OpenWeatherService implements WeatherService {
 
     @Override
     public boolean locationExists(LocationRequestDto location) {
+        BigDecimal epsilon = new BigDecimal("0.1");
+
         try {
             return fetchLocationDetails(location.getName()).stream()
                     .anyMatch(l -> l.getName().equals(location.getName())
-                            && l.getLatitude().compareTo(location.getLatitude()) == 0
-                            && l.getLongitude().compareTo(location.getLongitude()) == 0);
+                            && l.getLatitude().subtract(location.getLatitude()).compareTo(epsilon) < 0
+                            && l.getLongitude().subtract(location.getLongitude()).compareTo(epsilon) < 0);
         } catch (WeatherServiceException e) {
             return false;
         } catch (Exception e) {
