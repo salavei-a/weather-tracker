@@ -2,12 +2,12 @@ package com.asalavei.weathertracker.service;
 
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.entity.Session;
-import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,10 +26,8 @@ public class SessionService {
         return save(session);
     }
 
-    public User getUserById(String id) {
-        return sessionRepository.findById(id)
-                .map(Session::getUser)
-                .orElseThrow(() -> new NotFoundException("Session with ID '" + id + "' not found"));
+    public Optional<Session> getValidSession(String id) {
+        return sessionRepository.findActiveById(id);
     }
 
     public void extendSession(String id) {
@@ -38,10 +36,6 @@ public class SessionService {
 
     public void invalidate(String id) {
         sessionRepository.updateSessionExpiration(id, LocalDateTime.now());
-    }
-
-    public boolean isSessionValid(String id) {
-        return sessionRepository.findByIdAndExpiresAtAfter(id, LocalDateTime.now()).isPresent();
     }
 
     private LocalDateTime getSessionExpiryTime() {

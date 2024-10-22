@@ -78,7 +78,7 @@ public class LocationController {
             return "redirect:/";
         }
 
-        locationService.delete(location, user.getId());
+        locationService.deleteUserLocation(location, user.getId());
 
         return "redirect:/";
     }

@@ -10,19 +10,11 @@ import java.util.Optional;
 public class SessionHibernateRepository extends BaseHibernateRepository<Session> implements SessionRepository {
 
     @Override
-    public Optional<Session> findByIdAndExpiresAtAfter(String id, LocalDateTime expiresAfter) {
+    public Optional<Session> findActiveById(String id) {
         return executeInTransaction(s ->
-                Optional.ofNullable(s.createQuery("from Session where id = :id and expiresAt > :expiresAfter", Session.class)
+                Optional.ofNullable(s.createQuery("from Session s join fetch s.user where s.id = :id and s.expiresAt > :current", Session.class)
                         .setParameter("id", id)
-                        .setParameter("expiresAfter", expiresAfter)
-                        .uniqueResult()));
-    }
-
-    @Override
-    public Optional<Session> findById(String id) {
-        return executeInTransaction(s ->
-                Optional.ofNullable(s.createQuery("from Session where id = :id", Session.class)
-                        .setParameter("id", id)
+                        .setParameter("current", LocalDateTime.now())
                         .uniqueResult()));
     }
 

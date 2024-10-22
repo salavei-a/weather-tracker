@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface LocationRepository extends CrudRepository<Location> {
-    List<Location> findAllByUserId(Long userId);
+    List<Location> findAllByUser(Long userId);
 
-    void deleteByNameAndLatitudeAndLongitudeAndUserId(String name, BigDecimal latitude, BigDecimal longitude, Long userId);
+    void deleteLocationForUser(String name, BigDecimal latitude, BigDecimal longitude, Long userId);
 }

@@ -31,11 +31,11 @@ public class LocationService {
     }
 
     public List<Location> findAllByUserId(Long userId) {
-        return locationRepository.findAllByUserId(userId);
+        return locationRepository.findAllByUser(userId);
     }
 
-    public void delete(LocationRequestDto locationRequest, Long userId) {
-        locationRepository.deleteByNameAndLatitudeAndLongitudeAndUserId(
+    public void deleteUserLocation(LocationRequestDto locationRequest, Long userId) {
+        locationRepository.deleteLocationForUser(
                 locationRequest.getName(),
                 locationRequest.getLatitude(),
                 locationRequest.getLongitude(),

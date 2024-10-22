@@ -25,7 +25,7 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     }
 
     @Override
-    public List<Location> findAllByUserId(Long userId) {
+    public List<Location> findAllByUser(Long userId) {
         return executeInTransaction(s ->
                 s.createQuery("from Location where user.id = :userId", Location.class)
                         .setParameter("userId", userId)
@@ -34,7 +34,7 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     }
 
     @Override
-    public void deleteByNameAndLatitudeAndLongitudeAndUserId(String name, BigDecimal latitude, BigDecimal longitude, Long userId) {
+    public void deleteLocationForUser(String name, BigDecimal latitude, BigDecimal longitude, Long userId) {
         executeInTransaction(s ->
                 s.createQuery("delete from Location where name = :name " +
                               "and latitude = :latitude " +

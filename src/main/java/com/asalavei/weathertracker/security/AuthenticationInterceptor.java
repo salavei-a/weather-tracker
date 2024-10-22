@@ -1,5 +1,6 @@
 package com.asalavei.weathertracker.security;
 
+import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.service.SessionService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -37,10 +39,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
         }
 
-        boolean isSessionValid = sessionId != null && sessionService.isSessionValid(sessionId);
+        Optional<Session> session = sessionService.getValidSession(sessionId);
 
         if (AUTH_PAGES.contains(requestUri)) {
-            if (isSessionValid) {
+            if (session.isPresent()) {
                 response.sendRedirect("/");
                 return false;
             } else {
@@ -48,7 +50,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
         }
 
-        if (!isSessionValid) {
+        if (session.isEmpty()) {
             response.sendRedirect("/auth/signin");
             return false;
         }
@@ -56,9 +58,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         sessionService.extendSession(sessionId);
         extendCookie(sessionCookie, response);
 
-        // TODO: avoid User with password
-        // TODO: add logging?
-        SecurityContext.setAuthenticatedUser(sessionService.getUserById(sessionId));
+        SecurityContext.setAuthenticatedUser(session.get().getUser());
         return true;
     }
 

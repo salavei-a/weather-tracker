@@ -24,7 +24,7 @@ public class Location {
     private String name;
 
     @ToString.Exclude
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

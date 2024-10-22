@@ -6,9 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface SessionRepository extends CrudRepository<Session> {
-    Optional<Session> findByIdAndExpiresAtAfter(String id, LocalDateTime expiresAfter);
-
-    Optional<Session> findById(String id);
+    Optional<Session> findActiveById(String id);
 
     void updateSessionExpiration(String id, LocalDateTime newExpiresAt);
 }
