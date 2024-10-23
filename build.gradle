@@ -42,6 +42,7 @@ dependencies {
     implementation('org.mapstruct:mapstruct:1.6.2')
     implementation('org.hibernate.validator:hibernate-validator:8.0.1.Final')
     implementation('org.mindrot:jbcrypt:0.4')
+    implementation('org.apache.commons:commons-lang3:3.17.0')
 
     runtimeOnly('org.flywaydb:flyway-database-postgresql:10.19.0')
 
