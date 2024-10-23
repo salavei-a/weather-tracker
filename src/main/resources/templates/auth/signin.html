@@ -28,6 +28,9 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" th:field="*{password}" class="form-control" id="password" name="password" required/>
                 </div>
+
+                <input type="hidden" name="redirect_to" th:value="${param.redirect_to}"/>
+
                 <div class="error-container">
                     <div class="error" th:if="${#fields.hasAnyErrors()}">
                         <ul>

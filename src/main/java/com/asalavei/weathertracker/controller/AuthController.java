@@ -7,9 +7,11 @@ import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;
 import com.asalavei.weathertracker.dto.UserRequestDto;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -29,20 +31,27 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult, HttpServletResponse response) {
+    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto,
+                         BindingResult bindingResult,
+                         HttpServletRequest request,
+                         HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "auth/signin";
         }
 
         User user = authenticationService.authenticate(userRequestDto);
         Session session = sessionService.create(user);
-        Cookie cookie = new Cookie("sessionid", session.getId());
 
+        Cookie cookie = new Cookie("sessionid", session.getId());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(30 * 60);
-
         response.addCookie(cookie);
+
+        String redirectTo = request.getParameter("redirect_to");
+        if (!StringUtils.isBlank(redirectTo)) {
+            return "redirect:" + redirectTo;
+        }
 
         return "redirect:/";
     }

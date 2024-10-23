@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
@@ -38,7 +40,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         if (sessionOptional.isEmpty()) {
-            response.sendRedirect("/auth/signin");
+            String encodedUrl = URLEncoder.encode(getFullUrl(request), StandardCharsets.UTF_8);
+            response.sendRedirect("/auth/signin?redirect_to=" + encodedUrl);
             return false;
         }
 
@@ -60,6 +63,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     private Optional<String> getSessionIdFromCookies(Cookie[] cookies) {
+        if (cookies == null) {
+            return Optional.empty();
+        }
+
         return Arrays.stream(cookies)
                 .filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName()))
                 .map(Cookie::getValue)
@@ -68,6 +75,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private boolean isAuthPage(String uri) {
         return AUTH_PAGES.contains(uri);
+    }
+
+    private String getFullUrl(HttpServletRequest request) {
+        StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
+        String queryString = request.getQueryString();
+
+        return (queryString == null) ?
+                requestURL.toString() :
+                requestURL.append('?').append(queryString).toString();
     }
 
     private boolean isSessionNearExpiration(Session session) {
