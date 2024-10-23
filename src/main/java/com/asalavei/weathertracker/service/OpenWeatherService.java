@@ -7,6 +7,7 @@ import com.asalavei.weathertracker.dto.LocationResponseDto;
 import com.asalavei.weathertracker.exception.WeatherServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
@@ -26,17 +27,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OpenWeatherService implements WeatherService {
 
-    private static final String API_KEY = System.getenv("OPEN_WEATHER_API_KEY");
-    private static final String WEATHER_API_PATH = "/data/2.5/weather";
-    private static final String DIRECT_GEOCODING_API_PATH = "/geo/1.0/direct";
-    private static final String UNITS_OF_MEASUREMENT = "metric";
-
     private static final String CLIENT_ERROR = "Client error occurred";
     private static final String SERVER_ERROR = "Server error occurred";
     private static final String SERVER_ERROR_MESSAGE = "Failed to fetch weather data due to server error";
 
     private final RestClient restClient;
     private final LocationService locationService;
+
+    @Value("${weather.api.path}")
+    private String weatherApiPath;
+
+    @Value("${weather.geocoding.path}")
+    private String geocodingApiPath;
+
+    @Value("${weather.units}")
+    private String units;
+
+    @Value("${weather.api.key}")
+    private String apiKey;
 
     @Override
     public boolean locationExists(LocationRequestDto location) {
@@ -79,10 +87,10 @@ public class OpenWeatherService implements WeatherService {
     public List<LocationResponseDto> fetchLocationDetails(String locationName) {
         return restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(DIRECT_GEOCODING_API_PATH)
+                        .path(geocodingApiPath)
                         .queryParam("q", locationName)
                         .queryParam("limit", 5)
-                        .queryParam("appid", API_KEY)
+                        .queryParam("appid", apiKey)
                         .build())
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
@@ -102,11 +110,11 @@ public class OpenWeatherService implements WeatherService {
     public CurrentWeatherDto fetchWeatherByCoordinates(BigDecimal latitude, BigDecimal longitude) {
         return restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(WEATHER_API_PATH)
+                        .path(weatherApiPath)
                         .queryParam("lat", latitude)
                         .queryParam("lon", longitude)
-                        .queryParam("appid", API_KEY)
-                        .queryParam("units", UNITS_OF_MEASUREMENT)
+                        .queryParam("appid", apiKey)
+                        .queryParam("units", units)
                         .build())
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {

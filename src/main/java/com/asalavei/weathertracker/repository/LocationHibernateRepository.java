@@ -4,6 +4,7 @@ import com.asalavei.weathertracker.entity.Location;
 import com.asalavei.weathertracker.exception.AlreadyExistsException;
 import com.asalavei.weathertracker.exception.LocationAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -12,6 +13,10 @@ import java.util.List;
 @Slf4j
 @Repository
 public class LocationHibernateRepository extends BaseHibernateRepository<Location> implements LocationRepository {
+
+    public LocationHibernateRepository(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public Location save(Location location) {

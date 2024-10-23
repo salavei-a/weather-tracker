@@ -1,9 +1,9 @@
 package com.asalavei.weathertracker.repository;
 
-import com.asalavei.weathertracker.config.HibernateConfig;
 import com.asalavei.weathertracker.exception.AlreadyExistsException;
 import com.asalavei.weathertracker.exception.DatabaseOperationException;
 import jakarta.persistence.PersistenceException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,9 +13,10 @@ import org.hibernate.exception.ConstraintViolationException;
 import java.util.function.Function;
 
 @Slf4j
-public class BaseHibernateRepository<T> implements CrudRepository<T> {
+@RequiredArgsConstructor
+public abstract class BaseHibernateRepository<T> implements CrudRepository<T> {
 
-    protected static final SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
+    private final SessionFactory sessionFactory;
 
     @Override
     public T save(T entity) {

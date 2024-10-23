@@ -4,6 +4,7 @@ import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.exception.AlreadyExistsException;
 import com.asalavei.weathertracker.exception.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,6 +12,10 @@ import java.util.Optional;
 @Slf4j
 @Repository
 public class UserHibernateRepository extends BaseHibernateRepository<User> implements UserRepository {
+
+    public UserHibernateRepository(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public User save(User user) {

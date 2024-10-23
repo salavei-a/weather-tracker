@@ -1,6 +1,7 @@
 package com.asalavei.weathertracker.repository;
 
 import com.asalavei.weathertracker.entity.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,10 @@ import java.util.Optional;
 
 @Repository
 public class SessionHibernateRepository extends BaseHibernateRepository<Session> implements SessionRepository {
+
+    public SessionHibernateRepository(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public Optional<Session> findActiveById(String id) {
