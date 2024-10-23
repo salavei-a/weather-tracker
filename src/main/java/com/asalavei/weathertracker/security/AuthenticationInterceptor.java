@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -17,32 +18,18 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
+    private static final String SESSION_COOKIE_NAME = "sessionid";
     private static final Set<String> AUTH_PAGES = Set.of("/auth/signin", "/auth/signup");
 
     private final SessionService sessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String requestUri = request.getRequestURI();
-        Cookie[] cookies = request.getCookies();
-        Cookie sessionCookie = null;
-        String sessionId = null;
+        Optional<Session> sessionOptional = getSessionIdFromCookies(request.getCookies())
+                .flatMap(sessionService::getValidSession);
 
-        if (cookies != null) {
-            sessionCookie = Arrays.stream(cookies)
-                    .filter(cookie -> "sessionid".equals(cookie.getName()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (sessionCookie != null) {
-                sessionId = sessionCookie.getValue();
-            }
-        }
-
-        Optional<Session> session = sessionService.getValidSession(sessionId);
-
-        if (AUTH_PAGES.contains(requestUri)) {
-            if (session.isPresent()) {
+        if (isAuthPage(request.getRequestURI())) {
+            if (sessionOptional.isPresent()) {
                 response.sendRedirect("/");
                 return false;
             } else {
@@ -50,15 +37,20 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
         }
 
-        if (session.isEmpty()) {
+        if (sessionOptional.isEmpty()) {
             response.sendRedirect("/auth/signin");
             return false;
         }
 
-        sessionService.extendSession(sessionId);
-        extendCookie(sessionCookie, response);
+        Session session = sessionOptional.get();
+        String sessionId = session.getId();
 
-        SecurityContext.setAuthenticatedUser(session.get().getUser());
+        if (isSessionNearExpiration(session)) {
+            sessionService.extendSession(sessionId);
+            extendCookie(sessionId, response);
+        }
+
+        SecurityContext.setAuthenticatedUser(session.getUser());
         return true;
     }
 
@@ -67,7 +59,23 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         SecurityContext.clear();
     }
 
-    private void extendCookie(Cookie cookie, HttpServletResponse response) {
+    private Optional<String> getSessionIdFromCookies(Cookie[] cookies) {
+        return Arrays.stream(cookies)
+                .filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst();
+    }
+
+    private boolean isAuthPage(String uri) {
+        return AUTH_PAGES.contains(uri);
+    }
+
+    private boolean isSessionNearExpiration(Session session) {
+        return LocalDateTime.now().isAfter(session.getExpiresAt().minusMinutes(5));
+    }
+
+    private void extendCookie(String sessionId, HttpServletResponse response) {
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(30 * 60);
