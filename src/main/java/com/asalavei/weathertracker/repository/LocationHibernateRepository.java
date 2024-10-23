@@ -27,7 +27,7 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     @Override
     public List<Location> findAllByUser(Long userId) {
         return executeInTransaction(s ->
-                s.createQuery("from Location where user.id = :userId", Location.class)
+                s.createQuery("from Location where user.id = :userId order by id asc", Location.class)
                         .setParameter("userId", userId)
                         .getResultList()
         );
