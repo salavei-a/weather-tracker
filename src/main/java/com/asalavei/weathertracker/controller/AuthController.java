@@ -5,7 +5,7 @@ import com.asalavei.weathertracker.service.AuthenticationService;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;
 import com.asalavei.weathertracker.dto.UserRequestDto;
-import jakarta.servlet.http.Cookie;
+import com.asalavei.weathertracker.util.SessionCookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -30,8 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto,
-                         BindingResult bindingResult,
+    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult,
                          HttpServletRequest request,
                          HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
@@ -39,12 +38,7 @@ public class AuthController {
         }
 
         Session session = authenticationService.authenticate(userRequestDto);
-
-        Cookie cookie = new Cookie("sessionid", session.getId());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(30 * 60);
-        response.addCookie(cookie);
+        SessionCookieManager.createSessionCookie(response, session.getId());
 
         String redirectTo = request.getParameter("redirect_to");
         if (!StringUtils.isBlank(redirectTo)) {
@@ -70,16 +64,9 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public String signOut(@CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse response) {
-        Cookie cookie = new Cookie("sessionid", null);
-
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-
-        response.addCookie(cookie);
-
+    public String signOut(@CookieValue(value = SessionCookieManager.SESSION_COOKIE_NAME, defaultValue = "") String sessionId, HttpServletResponse response) {
         sessionService.invalidate(sessionId);
+        SessionCookieManager.invalidateSessionCookie(response);
 
         return "redirect:/auth/signin";
     }

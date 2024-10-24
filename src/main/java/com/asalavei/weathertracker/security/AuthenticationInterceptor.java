@@ -2,6 +2,7 @@ package com.asalavei.weathertracker.security;
 
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.service.SessionService;
+import com.asalavei.weathertracker.util.SessionCookieManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private static final String SESSION_COOKIE_NAME = "sessionid";
     private static final Set<String> AUTH_PAGES = Set.of("/auth/signin", "/auth/signup");
 
     private final SessionService sessionService;
@@ -50,7 +50,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         if (isSessionNearExpiration(session)) {
             sessionService.extendSession(sessionId);
-            extendCookie(sessionId, response);
+            SessionCookieManager.extendSessionCookie(response, sessionId);
         }
 
         SecurityContext.setAuthenticatedUser(session.getUser());
@@ -68,7 +68,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> SessionCookieManager.SESSION_COOKIE_NAME.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst();
     }
@@ -88,13 +88,5 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private boolean isSessionNearExpiration(Session session) {
         return LocalDateTime.now().isAfter(session.getExpiresAt().minusMinutes(5));
-    }
-
-    private void extendCookie(String sessionId, HttpServletResponse response) {
-        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(30 * 60);
-        response.addCookie(cookie);
     }
 }
