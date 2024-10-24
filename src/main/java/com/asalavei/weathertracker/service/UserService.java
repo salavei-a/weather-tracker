@@ -16,14 +16,18 @@ public class UserService {
 
     public void register(UserRequestDto userRequestDto) {
         User user = User.builder()
-                .username(userRequestDto.getUsername().trim().toLowerCase())
+                .username(normalizeUsername(userRequestDto.getUsername()))
                 .password(BCrypt.hashpw(userRequestDto.getPassword(), BCrypt.gensalt()))
                 .build();
         userRepository.save(user);
     }
 
-    public User loadUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public User getUser(String username) {
+        return userRepository.findByUsername(normalizeUsername(username))
                 .orElseThrow(() -> new NotFoundException("User with username '" + username + "' not found"));
+    }
+
+    private String normalizeUsername(String username) {
+        return username.trim().toLowerCase();
     }
 }

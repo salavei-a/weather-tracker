@@ -19,10 +19,10 @@ public class AuthenticationService {
     private final SessionService sessionService;
 
     public Session authenticate(UserRequestDto userRequestDto) {
-        String username = userRequestDto.getUsername().trim().toLowerCase();
+        String username = userRequestDto.getUsername();
 
         try {
-            User user = userService.loadUserByUsername(username);
+            User user = userService.getUser(username);
 
             if (isPasswordCorrect(userRequestDto, user)) {
                 return sessionService.create(user);
