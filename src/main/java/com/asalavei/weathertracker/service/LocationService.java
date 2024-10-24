@@ -15,7 +15,7 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
 
-    public Location create(LocationRequestDto locationRequest, User user) {
+    public void createUserLocation(LocationRequestDto locationRequest, User user) {
         Location location = Location.builder()
                 .name(locationRequest.getName())
                 .user(user)
@@ -23,11 +23,7 @@ public class LocationService {
                 .longitude(locationRequest.getLongitude())
                 .build();
 
-        return save(location);
-    }
-
-    private Location save(Location location) {
-        return locationRepository.save(location);
+        locationRepository.save(location);
     }
 
     public List<Location> findAllByUserId(Long userId) {

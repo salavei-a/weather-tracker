@@ -23,7 +23,7 @@ public class SessionService {
                 .expiresAt(getSessionExpiryTime())
                 .build();
 
-        return save(session);
+        return sessionRepository.save(session);
     }
 
     public Optional<Session> getValidSession(String id) {
@@ -40,9 +40,5 @@ public class SessionService {
 
     private LocalDateTime getSessionExpiryTime() {
         return LocalDateTime.now().plusMinutes(30);
-    }
-
-    private Session save(Session session) {
-        return sessionRepository.save(session);
     }
 }

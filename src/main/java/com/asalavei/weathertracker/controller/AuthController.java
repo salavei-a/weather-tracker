@@ -67,7 +67,7 @@ public class AuthController {
             return "auth/signup";
         }
 
-        userService.create(userRequestDto);
+        userService.register(userRequestDto);
         return "redirect:/auth/signin";
     }
 

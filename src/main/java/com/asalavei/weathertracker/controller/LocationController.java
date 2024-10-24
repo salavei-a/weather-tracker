@@ -64,7 +64,7 @@ public class LocationController {
             return "redirect:/";
         }
 
-        locationService.create(location, user);
+        locationService.createUserLocation(location, user);
 
         return "redirect:/";
     }
