@@ -51,6 +51,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}")
 
+    testImplementation('org.springframework:spring-test:6.1.13')
+    testImplementation('org.testcontainers:postgresql:1.20.3')
+    testImplementation('org.testcontainers:junit-jupiter:1.20.3')
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
