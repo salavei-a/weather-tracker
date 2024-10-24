@@ -43,6 +43,7 @@ dependencies {
     implementation('org.hibernate.validator:hibernate-validator:8.0.1.Final')
     implementation('org.mindrot:jbcrypt:0.4')
     implementation('org.apache.commons:commons-lang3:3.17.0')
+    implementation('jakarta.annotation:jakarta.annotation-api:3.0.0')
 
     runtimeOnly('org.flywaydb:flyway-database-postgresql:10.19.0')
 
