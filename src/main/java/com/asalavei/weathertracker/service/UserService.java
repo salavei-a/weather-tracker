@@ -14,10 +14,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void register(UserRequestDto userRequest) {
+    public void register(UserRequestDto userRequestDto) {
         User user = User.builder()
-                .username(userRequest.getUsername().trim().toLowerCase())
-                .password(BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt()))
+                .username(userRequestDto.getUsername().trim().toLowerCase())
+                .password(BCrypt.hashpw(userRequestDto.getPassword(), BCrypt.gensalt()))
                 .build();
         userRepository.save(user);
     }

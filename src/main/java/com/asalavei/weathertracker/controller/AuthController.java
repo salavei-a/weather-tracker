@@ -1,7 +1,6 @@
 package com.asalavei.weathertracker.controller;
 
 import com.asalavei.weathertracker.entity.Session;
-import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.service.AuthenticationService;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;
@@ -39,8 +38,7 @@ public class AuthController {
             return "auth/signin";
         }
 
-        User user = authenticationService.authenticate(userRequestDto);
-        Session session = sessionService.create(user);
+        Session session = authenticationService.authenticate(userRequestDto);
 
         Cookie cookie = new Cookie("sessionid", session.getId());
         cookie.setHttpOnly(true);
