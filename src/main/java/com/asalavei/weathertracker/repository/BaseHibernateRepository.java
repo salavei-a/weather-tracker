@@ -54,7 +54,7 @@ public abstract class BaseHibernateRepository<T> implements CrudRepository<T> {
         }
     }
 
-    protected static void rollbackTransaction(Transaction transaction) {
+    protected void rollbackTransaction(Transaction transaction) {
         try {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
