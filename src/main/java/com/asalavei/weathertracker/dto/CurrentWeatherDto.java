@@ -23,6 +23,7 @@ public class CurrentWeatherDto {
     private LocationInfo locationInfo;
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class Condition {
 
         private String description;
@@ -31,6 +32,7 @@ public class CurrentWeatherDto {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TemperatureInfo {
 
         @JsonProperty("temp")
@@ -43,6 +45,7 @@ public class CurrentWeatherDto {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LocationInfo {
 
         private String country;
