@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.asalavei.weathertracker.util.SessionCookieManager.SESSION_COOKIE_NAME;
+
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -68,7 +70,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> SessionCookieManager.SESSION_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst();
     }

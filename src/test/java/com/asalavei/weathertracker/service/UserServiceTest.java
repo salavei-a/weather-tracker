@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static com.asalavei.weathertracker.util.CredentialsUtil.normalizeUsername;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -77,7 +78,7 @@ class UserServiceTest {
 
         userService.register(user);
 
-        assertEquals(username.toLowerCase(), userService.getUser(username).getUsername());
+        assertEquals(normalizeUsername(username), userService.getUser(username).getUsername());
     }
 
     @Test
@@ -107,7 +108,7 @@ class UserServiceTest {
 
         User savedUser = userService.getUser(username);
 
-        assertEquals(username.toLowerCase(), savedUser.getUsername());
+        assertEquals(normalizeUsername(username), savedUser.getUsername());
     }
 
     @Test

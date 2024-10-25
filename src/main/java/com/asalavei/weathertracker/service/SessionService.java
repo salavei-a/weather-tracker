@@ -14,6 +14,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionService {
 
+    private static final int SESSION_MAX_AGE = 30 * 60;
+
     private final SessionRepository sessionRepository;
 
     public Session create(User user) {
@@ -39,6 +41,6 @@ public class SessionService {
     }
 
     private LocalDateTime getSessionExpiryTime() {
-        return LocalDateTime.now().plusMinutes(30);
+        return LocalDateTime.now().plusSeconds(SESSION_MAX_AGE);
     }
 }

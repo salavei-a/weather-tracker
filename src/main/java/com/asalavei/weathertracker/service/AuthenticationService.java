@@ -7,8 +7,9 @@ import com.asalavei.weathertracker.exception.AuthenticationException;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import static com.asalavei.weathertracker.util.CredentialsUtil.checkPassword;
 
 @Slf4j
 @Service
@@ -24,7 +25,7 @@ public class AuthenticationService {
         try {
             User user = userService.getUser(username);
 
-            if (isPasswordCorrect(userRequestDto, user)) {
+            if (isPasswordCorrect(userRequestDto.getPassword(), user.getPassword())) {
                 return sessionService.create(user);
             }
         } catch (NotFoundException e) {
@@ -36,7 +37,7 @@ public class AuthenticationService {
         throw new AuthenticationException("Incorrect username or password");
     }
 
-    private boolean isPasswordCorrect(UserRequestDto userRequestDto, User user) {
-        return BCrypt.checkpw(userRequestDto.getPassword(), user.getPassword());
+    private boolean isPasswordCorrect(String providedPassword, String storedPassword) {
+        return checkPassword(providedPassword, storedPassword);
     }
 }
