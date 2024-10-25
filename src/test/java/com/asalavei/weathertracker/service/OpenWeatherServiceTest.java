@@ -6,6 +6,7 @@ import com.asalavei.weathertracker.exception.WeatherServiceException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -34,16 +35,30 @@ class OpenWeatherServiceTest {
 
     private static final String LOCATION_NAME = "Minsk";
 
-    @Autowired
-    private RestClient restClient;
+    private static RequestHeadersUriSpec requestHeadersUriSpec;
+    private static RequestBodySpec requestBodySpec;
+    private static ResponseSpec responseSpec;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private WeatherService weatherService;
+
     @Autowired
     private OpenWeatherService openWeatherService;
+
+    @BeforeAll
+    static void setUp(@Autowired RestClient restClient) {
+        requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
+        requestBodySpec = Mockito.mock(RequestBodySpec.class);
+        responseSpec = Mockito.mock(ResponseSpec.class);
+
+        when(restClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
+    }
 
     @Test
     void givenCorrectLocationName_whenFetchLocationDetails_thenReturnLocationList() throws JsonProcessingException {
@@ -51,73 +66,6 @@ class OpenWeatherServiceTest {
                 [
                        {
                            "name": "Minsk",
-                           "local_names": {
-                               "ia": "Minsk",
-                               "oc": "Minsk",
-                               "hy": "Մինսկ",
-                               "et": "Minsk",
-                               "kn": "ಮಿನ್ಸ್ಕ್",
-                               "hi": "मिन्‍स्‍क",
-                               "sv": "Minsk",
-                               "en": "Minsk",
-                               "bg": "Минск",
-                               "hu": "Minszk",
-                               "tg": "Минск",
-                               "he": "מינסק",
-                               "gl": "Minsk",
-                               "vo": "Minsk",
-                               "ko": "민스크",
-                               "pt": "Minsk",
-                               "lt": "Minskas",
-                               "ky": "Минск",
-                               "nl": "Minsk",
-                               "fr": "Minsk",
-                               "vi": "Minxcơ",
-                               "ru": "Минск",
-                               "fa": "مینسک",
-                               "fi": "Minsk",
-                               "mk": "Минск",
-                               "ka": "მინსკი",
-                               "feature_name": "Minsk",
-                               "cu": "Мѣньскъ",
-                               "es": "Minsk",
-                               "el": "Μινσκ",
-                               "la": "Minscum",
-                               "th": "มินสก์",
-                               "ug": "مىنىسكى",
-                               "ga": "Minsc",
-                               "bo": "མིན་སིཀ།",
-                               "mr": "मिन्‍स्‍क",
-                               "yi": "מינסק",
-                               "ku": "Mînsk",
-                               "lv": "Minska",
-                               "ascii": "Minsk",
-                               "ja": "ミンスク",
-                               "it": "Minsk",
-                               "kk": "Минск",
-                               "no": "Minsk",
-                               "cv": "Минск",
-                               "zh": "明斯克",
-                               "ar": "مينسك",
-                               "kv": "Минск",
-                               "de": "Minsk",
-                               "cs": "Minsk",
-                               "eo": "Minsko",
-                               "io": "Minsk",
-                               "hr": "Minsk",
-                               "sl": "Minsk",
-                               "pl": "Mińsk",
-                               "ta": "மின்ஸ்க்",
-                               "is": "Minsk",
-                               "ml": "മിൻസ്ക്",
-                               "sk": "Minsk",
-                               "tt": "Минск",
-                               "uk": "Мінськ",
-                               "sr": "Минск",
-                               "os": "Минск",
-                               "ur": "منسک",
-                               "be": "Мінск"
-                           },
                            "lat": 53.9024716,
                            "lon": 27.5618225,
                            "country": "BY"
@@ -131,17 +79,9 @@ class OpenWeatherServiceTest {
                        }
                    ]
                 """;
-
-        RequestHeadersUriSpec requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
-        RequestBodySpec requestBodySpec = Mockito.mock(RequestBodySpec.class);
-        ResponseSpec responseSpec = Mockito.mock(ResponseSpec.class);
         List<LocationResponseDto> mockResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
         });
 
-        when(restClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
         when(responseSpec.body(any(ParameterizedTypeReference.class))).thenReturn(mockResponse);
 
         List<LocationResponseDto> locations = weatherService.fetchLocationDetails(LOCATION_NAME);
@@ -153,18 +93,10 @@ class OpenWeatherServiceTest {
     @Test
     void givenIncorrectLocationName_whenFetchLocationDetails_thenReturnEmptyList() throws JsonProcessingException {
         String incorrectLocationName = "Minskk";
-
         String responseBody = "[]";
-        RequestHeadersUriSpec requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
-        RequestBodySpec requestBodySpec = Mockito.mock(RequestBodySpec.class);
-        ResponseSpec responseSpec = Mockito.mock(ResponseSpec.class);
         List<LocationResponseDto> mockResponse = objectMapper.readValue(responseBody, new TypeReference<>() {
         });
 
-        when(restClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
         when(responseSpec.body(any(ParameterizedTypeReference.class))).thenReturn(mockResponse);
 
         List<LocationResponseDto> locations = weatherService.fetchLocationDetails(incorrectLocationName);
@@ -174,14 +106,6 @@ class OpenWeatherServiceTest {
 
     @Test
     void givenInvalidApiKey_whenFetchLocationDetails_thenThrowWeatherServiceException() {
-        RequestHeadersUriSpec requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
-        RequestBodySpec requestBodySpec = Mockito.mock(RequestBodySpec.class);
-        ResponseSpec responseSpec = Mockito.mock(ResponseSpec.class);
-
-        when(restClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
         when(responseSpec.body(any(ParameterizedTypeReference.class))).thenThrow(WeatherServiceException.class);
 
         assertThrows(WeatherServiceException.class, () -> weatherService.fetchLocationDetails(LOCATION_NAME));
@@ -238,16 +162,8 @@ class OpenWeatherServiceTest {
                      "cod": 200
                  }
                 """;
-
-        RequestHeadersUriSpec requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
-        RequestBodySpec requestBodySpec = Mockito.mock(RequestBodySpec.class);
-        ResponseSpec responseSpec = Mockito.mock(ResponseSpec.class);
         CurrentWeatherDto mockResponse = objectMapper.readValue(responseBody, CurrentWeatherDto.class);
 
-        when(restClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
         when(responseSpec.body(CurrentWeatherDto.class)).thenReturn(mockResponse);
 
         CurrentWeatherDto currentWeatherDto = weatherService.fetchWeatherByCoordinates(latitude, longitude);
@@ -261,14 +177,6 @@ class OpenWeatherServiceTest {
         BigDecimal latitude = new BigDecimal("99");
         BigDecimal longitude = new BigDecimal("99");
 
-        RequestHeadersUriSpec requestHeadersUriSpec = Mockito.mock(RequestHeadersUriSpec.class);
-        RequestBodySpec requestBodySpec = Mockito.mock(RequestBodySpec.class);
-        ResponseSpec responseSpec = Mockito.mock(ResponseSpec.class);
-
-        when(restClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
         when(responseSpec.body(any(Class.class))).thenThrow(WeatherServiceException.class);
 
         assertThrows(WeatherServiceException.class, () -> openWeatherService.fetchWeatherByCoordinates(latitude, longitude));
