@@ -6,13 +6,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
@@ -25,8 +23,7 @@ import static org.mockito.Mockito.when;
 
 import org.springframework.web.client.RestClient.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {OpenWeatherService.class, OpenWeatherServiceTest.TestConfig.class})
+@ExtendWith(MockitoExtension.class)
 class OpenWeatherServiceTest {
 
     private static final String LOCATION_NAME = "Minsk";
@@ -115,14 +112,13 @@ class OpenWeatherServiceTest {
                ]
             """;
 
-    @Autowired
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Mock
     private RestClient restClient;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private WeatherService weatherService;
+    @InjectMocks
+    private OpenWeatherService weatherService;
 
     @Test
     void givenValidLocationName_whenFetchLocationDetails_thenReturnLocationList() throws JsonProcessingException {
@@ -143,29 +139,5 @@ class OpenWeatherServiceTest {
 
         assertFalse(locations.isEmpty());
         assertTrue(locations.stream().anyMatch(l -> l.getName().equals(LOCATION_NAME)));
-    }
-
-    @Configuration
-    public static class TestConfig {
-
-        @Bean
-        public RestClient restClient() {
-            return Mockito.mock(RestClient.class);
-        }
-
-        @Bean
-        public SessionService sessionService() {
-            return Mockito.mock(SessionService.class);
-        }
-
-        @Bean
-        public LocationService locationService() {
-            return Mockito.mock(LocationService.class);
-        }
-
-        @Bean
-        public ObjectMapper objectMapper() {
-            return new ObjectMapper();
-        }
     }
 }
