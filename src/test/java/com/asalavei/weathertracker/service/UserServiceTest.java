@@ -4,10 +4,11 @@ import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.exception.UserAlreadyExistsException;
 import com.asalavei.weathertracker.repository.UserHibernateRepository;
 import com.asalavei.weathertracker.config.TestConfig;
-import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.dto.SignUpRequestDto;
 import com.asalavei.weathertracker.entity.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,11 +25,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {TestConfig.class, UserService.class, UserHibernateRepository.class})
 class UserServiceTest {
 
+    private static final String USERNAME = "Username";
+    private static final String PASSWORD = "Password";
+
+    private static SignUpRequestDto signUpRequest;
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @BeforeAll
+    static void setUp() {
+        signUpRequest = SignUpRequestDto.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .matchingPassword(PASSWORD)
+                .build();
+    }
 
     @BeforeEach
     void cleanDatabase() {
@@ -40,30 +55,17 @@ class UserServiceTest {
     }
 
     @Test
-    void givenAvailableUsername_whenRegister_thenSuccessfullySaveUser() {
-        // Arrange
-        String username = "test";
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username(username)
-                .password("test")
-                .build();
+    void givenAvailableUsername_whenRegister_thenSaveUser() {
+        userService.register(signUpRequest);
 
-        // Act
-        userService.register(userRequestDto);
-
-        // Assert
-        assertEquals(username, userService.getUser(username).getUsername());
+        assertEquals(normalizeUsername(USERNAME), userService.getUser(USERNAME).getUsername());
     }
 
     @Test
     void givenExistingUsername_whenRegister_thenThrowUserAlreadyExistsException() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username("existingUser")
-                .password("test")
-                .build();
-        userService.register(userRequestDto);
+        userService.register(signUpRequest);
 
-        Executable act = () -> userService.register(userRequestDto);
+        Executable act = () -> userService.register(signUpRequest);
 
         assertThrows(UserAlreadyExistsException.class, act);
     }
@@ -71,51 +73,37 @@ class UserServiceTest {
     @Test
     void givenUpperCaseUsername_whenRegister_thenSaveLowerCaseUsername() {
         String username = "UPPER_USERNAME";
-        UserRequestDto user = UserRequestDto.builder()
+        SignUpRequestDto upperCaseUsernameSignUpRequest = SignUpRequestDto.builder()
                 .username(username)
-                .password("test")
+                .password(USERNAME)
                 .build();
 
-        userService.register(user);
+        userService.register(upperCaseUsernameSignUpRequest);
 
         assertEquals(normalizeUsername(username), userService.getUser(username).getUsername());
     }
 
     @Test
     void givenUserRequest_whenRegister_thenPasswordIsHashedInDatabase() {
-        String rawPassword = "test";
-        String username = "test";
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username(username)
-                .password(rawPassword)
-                .build();
+        userService.register(signUpRequest);
 
-        userService.register(userRequestDto);
-
-        User savedUser = userService.getUser(username);
-        assertNotEquals(rawPassword, savedUser.getPassword());
-        assertTrue(BCrypt.checkpw(rawPassword, savedUser.getPassword()));
+        User user = userService.getUser(USERNAME);
+        assertNotEquals(PASSWORD, user.getPassword());
+        assertTrue(BCrypt.checkpw(PASSWORD, user.getPassword()));
     }
 
     @Test
     void givenExistingUser_whenGetUser_thenReturnUser() {
-        String username = "ExistentUser";
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username(username)
-                .password("test")
-                .build();
-        userService.register(userRequestDto);
+        userService.register(signUpRequest);
 
-        User savedUser = userService.getUser(username);
+        User user = userService.getUser(USERNAME);
 
-        assertEquals(normalizeUsername(username), savedUser.getUsername());
+        assertEquals(normalizeUsername(USERNAME), user.getUsername());
     }
 
     @Test
     void givenNotExistingUser_whenGetUser_thenThrowNotFoundException() {
-        String username = "NotExistentUser";
-
-        Executable act = () -> userService.getUser(username);
+        Executable act = () -> userService.getUser(USERNAME);
 
         assertThrows(NotFoundException.class, act);
     }

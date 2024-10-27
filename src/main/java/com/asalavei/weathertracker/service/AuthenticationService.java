@@ -1,8 +1,8 @@
 package com.asalavei.weathertracker.service;
 
+import com.asalavei.weathertracker.dto.SignInRequestDto;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.entity.User;
-import com.asalavei.weathertracker.dto.UserRequestDto;
 import com.asalavei.weathertracker.exception.AuthenticationException;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +19,13 @@ public class AuthenticationService {
     private final UserService userService;
     private final SessionService sessionService;
 
-    public Session authenticate(UserRequestDto userRequestDto) {
-        String username = userRequestDto.getUsername();
+    public Session authenticate(SignInRequestDto signInRequest) {
+        String username = signInRequest.getUsername();
 
         try {
             User user = userService.getUser(username);
 
-            if (isPasswordCorrect(userRequestDto.getPassword(), user.getPassword())) {
+            if (isPasswordCorrect(signInRequest.getPassword(), user.getPassword())) {
                 return sessionService.create(user);
             }
         } catch (NotFoundException e) {

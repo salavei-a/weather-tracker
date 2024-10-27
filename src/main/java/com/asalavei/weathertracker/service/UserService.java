@@ -3,7 +3,7 @@ package com.asalavei.weathertracker.service;
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.repository.UserRepository;
-import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.dto.SignUpRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void register(UserRequestDto userRequestDto) {
+    public void register(SignUpRequestDto signUpRequest) {
         User user = User.builder()
-                .username(normalizeUsername(userRequestDto.getUsername()))
-                .password(hashPassword(userRequestDto.getPassword()))
+                .username(normalizeUsername(signUpRequest.getUsername()))
+                .password(hashPassword(signUpRequest.getPassword()))
                 .build();
         userRepository.save(user);
     }

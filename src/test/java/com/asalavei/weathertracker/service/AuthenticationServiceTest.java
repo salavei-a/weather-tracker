@@ -1,7 +1,8 @@
 package com.asalavei.weathertracker.service;
 
 import com.asalavei.weathertracker.config.TestConfig;
-import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.dto.SignInRequestDto;
+import com.asalavei.weathertracker.dto.SignUpRequestDto;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.exception.AuthenticationException;
@@ -9,6 +10,7 @@ import com.asalavei.weathertracker.repository.SessionHibernateRepository;
 import com.asalavei.weathertracker.repository.UserHibernateRepository;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,9 @@ class AuthenticationServiceTest {
     private static final String USERNAME = "Username";
     private static final String PASSWORD = "Password";
 
+    private static SignUpRequestDto signUpRequest;
+    private static SignInRequestDto signInRequest;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -36,6 +41,19 @@ class AuthenticationServiceTest {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @BeforeAll
+    static void setUp() {
+        signUpRequest = SignUpRequestDto.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .matchingPassword(PASSWORD)
+                .build();
+        signInRequest = SignInRequestDto.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+    }
 
     @BeforeEach
     void cleanDatabase() {
@@ -50,14 +68,10 @@ class AuthenticationServiceTest {
     @Test
     void givenCorrectCredentials_whenAuthenticate_thenReturnUserSession() {
         // Arrange
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .build();
-        userService.register(userRequestDto);
+        userService.register(signUpRequest);
 
         // Act
-        Session session = authenticationService.authenticate(userRequestDto);
+        Session session = authenticationService.authenticate(signInRequest);
 
         // Assert
         assertEquals(normalizeUsername(USERNAME), session.getUser().getUsername());
@@ -66,12 +80,12 @@ class AuthenticationServiceTest {
     @Test
     void givenNonExistingUsername_whenAuthenticate_thenThrowAuthenticationException() {
         String nonExistingUsername = "nonExistingUsername";
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        SignInRequestDto nonExistingUserSignInRequest = SignInRequestDto.builder()
                 .username(nonExistingUsername)
                 .password(PASSWORD)
                 .build();
 
-        Executable act = () -> authenticationService.authenticate(userRequestDto);
+        Executable act = () -> authenticationService.authenticate(nonExistingUserSignInRequest);
 
         assertThrows(AuthenticationException.class, act);
     }
@@ -79,26 +93,22 @@ class AuthenticationServiceTest {
     @Test
     void givenWrongPassword_whenAuthenticate_thenThrowAuthenticationException() {
         String wrongPassword = "WrongPassword";
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        SignInRequestDto wrongPasswordSignInRequest = SignInRequestDto.builder()
                 .username(USERNAME)
                 .password(wrongPassword)
                 .build();
 
-        Executable act = () -> authenticationService.authenticate(userRequestDto);
+        Executable act = () -> authenticationService.authenticate(wrongPasswordSignInRequest);
 
         assertThrows(AuthenticationException.class, act);
     }
 
     @Test
     void givenCorrectCredentials_whenAuthenticateTwice_thenTwoUniqueSessionsCreated() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .build();
-        userService.register(userRequestDto);
+        userService.register(signUpRequest);
 
-        Session firstSession = authenticationService.authenticate(userRequestDto);
-        Session secondSession = authenticationService.authenticate(userRequestDto);
+        Session firstSession = authenticationService.authenticate(signInRequest);
+        Session secondSession = authenticationService.authenticate(signInRequest);
 
         assertEquals(firstSession.getUser().getUsername(), secondSession.getUser().getUsername());
         assertNotEquals(firstSession.getId(), secondSession.getId());

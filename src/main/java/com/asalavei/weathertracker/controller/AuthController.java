@@ -1,10 +1,11 @@
 package com.asalavei.weathertracker.controller;
 
+import com.asalavei.weathertracker.dto.SignInRequestDto;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.service.AuthenticationService;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;
-import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.dto.SignUpRequestDto;
 import com.asalavei.weathertracker.util.SessionCookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,19 +26,19 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("/signin")
-    public String signInForm(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signInForm(@ModelAttribute("user") SignInRequestDto signInRequest) {
         return "auth/signin";
     }
 
     @PostMapping("/signin")
-    public String signIn(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult,
+    public String signIn(@Valid @ModelAttribute("user") SignInRequestDto signInRequest, BindingResult bindingResult,
                          HttpServletRequest request,
                          HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "auth/signin";
         }
 
-        Session session = authenticationService.authenticate(userRequestDto);
+        Session session = authenticationService.authenticate(signInRequest);
         SessionCookieManager.createSessionCookie(response, session.getId());
 
         String redirectTo = request.getParameter("redirect_to");
@@ -49,17 +50,17 @@ public class AuthController {
     }
 
     @GetMapping("/signup")
-    public String signUpForm(@ModelAttribute("user") UserRequestDto userRequestDto) {
+    public String signUpForm(@ModelAttribute("user") SignUpRequestDto signUpRequest) {
         return "auth/signup";
     }
 
     @PostMapping("/signup")
-    public String signUp(@Valid @ModelAttribute("user") UserRequestDto userRequestDto, BindingResult bindingResult) {
+    public String signUp(@Valid @ModelAttribute("user") SignUpRequestDto signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "auth/signup";
         }
 
-        userService.register(userRequestDto);
+        userService.register(signUpRequest);
         return "redirect:/auth/signin";
     }
 

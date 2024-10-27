@@ -1,6 +1,7 @@
 package com.asalavei.weathertracker.handler;
 
-import com.asalavei.weathertracker.dto.UserRequestDto;
+import com.asalavei.weathertracker.dto.SignInRequestDto;
+import com.asalavei.weathertracker.dto.SignUpRequestDto;
 import com.asalavei.weathertracker.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public String handleUserAlreadyExistsException(UserAlreadyExistsException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        model.addAttribute("user", new UserRequestDto());
+        model.addAttribute("user", new SignUpRequestDto());
         return "auth/signup";
     }
 
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String handleAuthenticationException(AuthenticationException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        model.addAttribute("user", new UserRequestDto());
+        model.addAttribute("user", new SignInRequestDto());
         return "auth/signin";
     }
 }
