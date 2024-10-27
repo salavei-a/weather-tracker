@@ -20,7 +20,7 @@ public class SignUpRequestDto {
 
     @ValidUsername
     @NotBlank(message = "Username is required")
-    @Size(min = 1, max = 39, message = "Username must be between 1 and 39 characters long ")
+    @Size(min = 1, max = 39, message = "Username must be between 1 and 39 characters long")
     private String username;
 
     @ValidPassword
