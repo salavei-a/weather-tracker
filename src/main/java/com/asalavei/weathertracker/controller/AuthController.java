@@ -6,12 +6,13 @@ import com.asalavei.weathertracker.service.AuthenticationService;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.service.UserService;
 import com.asalavei.weathertracker.dto.SignUpRequestDto;
-import com.asalavei.weathertracker.util.SessionCookieManager;
+import com.asalavei.weathertracker.util.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,12 @@ public class AuthController {
     private final SessionService sessionService;
     private final UserService userService;
     private final AuthenticationService authenticationService;
+
+    @Value("${weather-tracker.session-cookie-name}")
+    private String sessionCookieName;
+
+    @Value("${weather-tracker.session-cookie-max-age}")
+    private int sessionCookieMaxAge;
 
     @GetMapping("/signin")
     public String signInForm(@ModelAttribute("user") SignInRequestDto signInRequest) {
@@ -39,7 +46,7 @@ public class AuthController {
         }
 
         Session session = authenticationService.authenticate(signInRequest);
-        SessionCookieManager.createSessionCookie(response, session.getId());
+        CookieManager.createCookie(sessionCookieName, sessionCookieMaxAge, session.getId(), response);
 
         String redirectTo = request.getParameter("redirect_to");
         if (!StringUtils.isBlank(redirectTo)) {
@@ -65,9 +72,9 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public String signOut(@CookieValue(value = SessionCookieManager.SESSION_COOKIE_NAME, defaultValue = "") String sessionId, HttpServletResponse response) {
+    public String signOut(@CookieValue(value = "${weather-tracker.session-cookie-name}", defaultValue = "") String sessionId, HttpServletResponse response) {
         sessionService.invalidate(sessionId);
-        SessionCookieManager.invalidateSessionCookie(response);
+        CookieManager.invalidateCookie(sessionCookieName, response);
 
         return "redirect:/auth/signin";
     }

@@ -2,11 +2,12 @@ package com.asalavei.weathertracker.security;
 
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.service.SessionService;
-import com.asalavei.weathertracker.util.SessionCookieManager;
+import com.asalavei.weathertracker.util.CookieManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,8 +18,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.asalavei.weathertracker.util.SessionCookieManager.SESSION_COOKIE_NAME;
-
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -26,6 +25,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private static final Set<String> AUTH_PAGES = Set.of("/auth/signin", "/auth/signup");
 
     private final SessionService sessionService;
+
+    @Value("${weather-tracker.session-cookie-name}")
+    private String sessionCookieName;
+
+    @Value("${weather-tracker.session-cookie-max-age}")
+    private int sessionCookieMaxAge;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -52,7 +57,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         if (isSessionNearExpiration(session)) {
             sessionService.extendSession(sessionId);
-            SessionCookieManager.extendSessionCookie(response, sessionId);
+            CookieManager.extendCookie(sessionCookieName, sessionCookieMaxAge, sessionId, response);
         }
 
         SecurityContext.setAuthenticatedUser(session.getUser());
@@ -70,7 +75,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         return Arrays.stream(cookies)
-                .filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> sessionCookieName.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst();
     }

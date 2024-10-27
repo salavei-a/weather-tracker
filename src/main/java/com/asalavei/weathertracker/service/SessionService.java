@@ -4,6 +4,7 @@ import com.asalavei.weathertracker.entity.User;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,9 +15,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionService {
 
-    private static final int SESSION_MAX_AGE = 30 * 60;
-
     private final SessionRepository sessionRepository;
+
+    @Value("${weather-tracker.session-max-age}")
+    private int sessionMaxAge;
 
     public Session create(User user) {
         Session session = Session.builder()
@@ -41,6 +43,6 @@ public class SessionService {
     }
 
     private LocalDateTime getSessionExpiryTime() {
-        return LocalDateTime.now().plusSeconds(SESSION_MAX_AGE);
+        return LocalDateTime.now().plusSeconds(sessionMaxAge);
     }
 }
