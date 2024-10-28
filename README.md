@@ -1,8 +1,8 @@
-# Tennis Scoreboard
+# Weather Tracker
 
 ## Overview
 
-The Weather Tracker is a web application that allows users to view the current weather for selected locations. 
+Weather Tracker is a web application that allows users to view the current weather for selected locations. 
 Users can register, add various locations (cities, towns, etc.) to their collection, and monitor real-time weather information for each of these places.
 
 ## Technologies
@@ -43,7 +43,7 @@ To start the project locally, use the provided [docker-compose.yml](docker-compo
 development and testing purposes on a local machine.
 
 **Key Points:** 
-- **Open Weather API key** You must set the system variable `OPEN_WEATHER_API_KEY` with your API key before starting application.
+- **Open Weather API key:** You must set the system variable `OPEN_WEATHER_API_KEY` with your API key before starting application.
 - **Docker Containers:** The local startup configuration includes Docker container with PostgreSQL.
 - **Tomcat:** You will need to install and configure Tomcat manually or run it using IntelliJ IDEA.
 
@@ -63,7 +63,7 @@ You can also use Docker Desktop for convenience.
 
 **Key Points:**
 
-- **Open Weather API key** See instructions in the `Local Project Startup` section.
+- **Open Weather API key:** See instructions in the `Local Project Startup` section.
 - **Docker Containers:** The server deployment configuration includes Docker containers for PostgreSQL and Tomcat.
 
 For server deployment, use the [docker-compose-prod.yml](docker-compose-prod.yml) file.
