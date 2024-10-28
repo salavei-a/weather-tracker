@@ -33,7 +33,7 @@ public class LocationController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public String search(@Valid @ModelAttribute("location") LocationSearchRequestDto location, BindingResult bindingResult, Model model) {
+    public String search(@Valid @ModelAttribute("location") LocationSearchRequestDto locationSearchRequest, BindingResult bindingResult, Model model) {
         User user = SecurityContext.getAuthenticatedUser();
         model.addAttribute("user", userMapper.toDto(user));
 
@@ -42,14 +42,14 @@ public class LocationController {
             return "locations";
         }
 
-        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(location.getName());
+        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(locationSearchRequest.getName());
         model.addAttribute("locations", locations);
 
         return "locations";
     }
 
-    @PostMapping("/add")
-    public String add(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult) {
+    @PostMapping
+    public String add(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
@@ -57,20 +57,20 @@ public class LocationController {
             return "redirect:/";
         }
 
-        if (!weatherService.locationExists(location)) {
+        if (!weatherService.locationExists(locationRequest)) {
             log.warn("Attempt to add non-existent location by user={} with potentially manipulated location details. " +
                      "name={}, latitude={}, longitude={}",
-                    user.getUsername(), location.getName(), location.getLatitude(), location.getLongitude());
+                    user.getUsername(), locationRequest.getName(), locationRequest.getLatitude(), locationRequest.getLongitude());
             return "redirect:/";
         }
 
-        locationService.createUserLocation(location, user);
+        locationService.createUserLocation(locationRequest, user);
 
         return "redirect:/";
     }
 
-    @DeleteMapping("/delete")
-    public String delete(@Valid @ModelAttribute("location") LocationRequestDto location, BindingResult bindingResult) {
+    @DeleteMapping
+    public String delete(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = SecurityContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
@@ -78,7 +78,7 @@ public class LocationController {
             return "redirect:/";
         }
 
-        locationService.deleteUserLocation(location, user.getId());
+        locationService.deleteUserLocation(locationRequest, user.getId());
 
         return "redirect:/";
     }

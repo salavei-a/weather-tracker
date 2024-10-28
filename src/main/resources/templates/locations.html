@@ -36,7 +36,7 @@
                         <p class="card-text mb-1" th:text="'Longitude: ' + ${location.longitude}"></p>
                         <p class="card-text mb-1" th:text="'Country: ' + ${location.country}"></p>
                         <p class="card-text mb-3" th:if="${location.state != null}" th:text="'State: ' + ${location.state}"></p>
-                        <form th:action="@{/locations/add}" method="post" class="mt-auto">
+                        <form th:action="@{/locations}" method="post" class="mt-auto">
                             <input type="hidden" th:name="name" th:value="${location.name}"/>
                             <input type="hidden" th:name="latitude" th:value="${location.latitude}"/>
                             <input type="hidden" th:name="longitude" th:value="${location.longitude}"/>
