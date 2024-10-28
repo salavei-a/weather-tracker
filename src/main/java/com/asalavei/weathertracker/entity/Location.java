@@ -28,7 +28,7 @@ public class Location {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "latitude", precision = 9, scale = 6, nullable = false)
+    @Column(name = "latitude", precision = 8, scale = 6, nullable = false)
     private BigDecimal latitude;
 
     @Column(name = "longitude", precision = 9, scale = 6, nullable = false)
