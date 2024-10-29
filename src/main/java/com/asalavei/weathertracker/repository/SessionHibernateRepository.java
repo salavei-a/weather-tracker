@@ -15,7 +15,7 @@ public class SessionHibernateRepository extends BaseHibernateRepository<Session>
     }
 
     @Override
-    public Optional<Session> findActiveById(String id) {
+    public Optional<Session> findActive(String id) {
         return executeInTransaction(s ->
                 Optional.ofNullable(s.createQuery("from Session s join fetch s.user where s.id = :id and s.expiresAt > :current", Session.class)
                         .setParameter("id", id)

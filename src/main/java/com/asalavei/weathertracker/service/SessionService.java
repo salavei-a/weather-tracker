@@ -34,7 +34,7 @@ public class SessionService {
     }
 
     public Optional<Session> getValidSession(String id) {
-        return sessionRepository.findActiveById(id);
+        return sessionRepository.findActive(id);
     }
 
     public void extendSession(String id) {

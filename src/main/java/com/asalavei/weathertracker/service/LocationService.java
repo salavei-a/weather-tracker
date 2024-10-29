@@ -26,7 +26,7 @@ public class LocationService {
         locationRepository.save(location);
     }
 
-    public List<Location> findAllByUserId(Long userId) {
+    public List<Location> findAllUserLocations(Long userId) {
         return locationRepository.findAllByUser(userId);
     }
 

@@ -66,7 +66,7 @@ public class OpenWeatherService implements WeatherService {
 
     @Override
     public List<CurrentWeatherDto> getUserLocationsWeather(Long userId) {
-        List<Location> userLocations = locationService.findAllByUserId(userId);
+        List<Location> userLocations = locationService.findAllUserLocations(userId);
 
         return userLocations.stream()
                 .map(location -> {
