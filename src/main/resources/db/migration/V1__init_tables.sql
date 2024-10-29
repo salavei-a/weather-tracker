@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS locations
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE UNIQUE INDEX idx_user_location_unique ON locations(user_id, latitude, longitude);
+CREATE UNIQUE INDEX uidx_user_location_unique ON locations(user_id, latitude, longitude);
 
 CREATE TABLE IF NOT EXISTS sessions
 (
