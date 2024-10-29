@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import static com.asalavei.weathertracker.common.Constants.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/")
@@ -23,10 +25,10 @@ public class HomeController {
         User user = AuthenticatedUserContext.getAuthenticatedUser();
 
         if (user != null) {
-            model.addAttribute("user", userMapper.toDto(user));
-            model.addAttribute("locations", userWeatherService.getUserLocationsWeather(user.getId()));
+            model.addAttribute(USER_ATTRIBUTE, userMapper.toDto(user));
+            model.addAttribute(LOCATIONS_ATTRIBUTE, userWeatherService.getUserLocationsWeather(user.getId()));
         }
 
-        return "home";
+        return HOME_VIEW;
     }
 }

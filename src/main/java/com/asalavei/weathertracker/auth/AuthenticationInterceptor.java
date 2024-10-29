@@ -11,13 +11,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.Set;
+
+import static com.asalavei.weathertracker.common.Constants.*;
 
 @Component
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
-
-    private static final Set<String> AUTH_PAGES = Set.of("/auth/signin", "/auth/signup");
 
     private final SessionService sessionService;
 
@@ -34,7 +33,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         if (isAuthPage(request.getRequestURI())) {
             if (sessionOptional.isPresent()) {
-                response.sendRedirect("/");
+                response.sendRedirect(HOME_URL);
                 return false;
             } else {
                 return true;
@@ -43,7 +42,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         if (sessionOptional.isEmpty()) {
             String encodedUrl = URLEncoder.encode(getFullUrl(request), StandardCharsets.UTF_8);
-            response.sendRedirect("/auth/signin?redirect_to=" + encodedUrl);
+            response.sendRedirect(SIGNIN_URL_WITH_REDIRECT + encodedUrl);
             return false;
         }
 

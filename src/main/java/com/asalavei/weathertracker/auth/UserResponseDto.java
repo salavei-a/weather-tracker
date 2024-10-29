@@ -3,6 +3,6 @@ package com.asalavei.weathertracker.auth;
 import lombok.Value;
 
 @Value
-public class SignInResponseDto {
+public class UserResponseDto {
     String username;
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import static com.asalavei.weathertracker.common.Constants.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -27,42 +29,42 @@ public class AuthController {
     private int sessionCookieMaxAge;
 
     @GetMapping("/signin")
-    public String signInForm(@ModelAttribute("user") SignInRequestDto signInRequest) {
-        return "auth/signin";
+    public String signInForm(@ModelAttribute(USER_ATTRIBUTE) SignInRequestDto signInRequest) {
+        return SIGNIN_VIEW;
     }
 
     @PostMapping("/signin")
-    public String signIn(@Valid @ModelAttribute("user") SignInRequestDto signInRequest, BindingResult bindingResult,
+    public String signIn(@Valid @ModelAttribute(USER_ATTRIBUTE) SignInRequestDto signInRequest, BindingResult bindingResult,
                          HttpServletRequest request,
                          HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return "auth/signin";
+            return SIGNIN_VIEW;
         }
 
         Session session = authenticationService.authenticate(signInRequest);
         CookieManager.createCookie(sessionCookieName, sessionCookieMaxAge, session.getId(), response);
 
-        String redirectTo = request.getParameter("redirect_to");
+        String redirectTo = request.getParameter(REDIRECT_TO_PARAM);
         if (!StringUtils.isBlank(redirectTo)) {
             return "redirect:" + redirectTo;
         }
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @GetMapping("/signup")
-    public String signUpForm(@ModelAttribute("user") SignUpRequestDto signUpRequest) {
-        return "auth/signup";
+    public String signUpForm(@ModelAttribute(USER_ATTRIBUTE) SignUpRequestDto signUpRequest) {
+        return SIGNUP_VIEW;
     }
 
     @PostMapping("/signup")
-    public String signUp(@Valid @ModelAttribute("user") SignUpRequestDto signUpRequest, BindingResult bindingResult) {
+    public String signUp(@Valid @ModelAttribute(USER_ATTRIBUTE) SignUpRequestDto signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "auth/signup";
+            return SIGNUP_VIEW;
         }
 
         userService.register(signUpRequest);
-        return "redirect:/auth/signin";
+        return REDIRECT_SIGNIN;
     }
 
     @PostMapping("/signout")
@@ -70,6 +72,6 @@ public class AuthController {
         sessionService.invalidate(sessionId);
         CookieManager.invalidateCookie(sessionCookieName, response);
 
-        return "redirect:/auth/signin";
+        return REDIRECT_SIGNIN;
     }
 }

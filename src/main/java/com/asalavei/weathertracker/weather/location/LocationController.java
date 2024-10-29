@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.asalavei.weathertracker.common.Constants.*;
 
 @Slf4j
 @Controller
@@ -29,54 +29,53 @@ public class LocationController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public String search(@Valid @ModelAttribute("location") LocationSearchRequestDto locationSearchRequest, BindingResult bindingResult, Model model) {
+    public String search(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationSearchRequestDto locationSearchRequest, BindingResult bindingResult, Model model) {
         User user = AuthenticatedUserContext.getAuthenticatedUser();
-        model.addAttribute("user", userMapper.toDto(user));
+        model.addAttribute(USER_ATTRIBUTE, userMapper.toDto(user));
 
         if (bindingResult.hasErrors()) {
             logBindingResultErrors(SEARCH, bindingResult, user.getUsername());
-            return "locations";
+            return LOCATIONS_VIEW;
         }
 
-        List<LocationResponseDto> locations = weatherService.fetchLocationDetails(locationSearchRequest.getName());
-        model.addAttribute("locations", locations);
+        model.addAttribute(LOCATIONS_ATTRIBUTE, weatherService.fetchLocationDetails(locationSearchRequest.getName()));
 
-        return "locations";
+        return LOCATIONS_VIEW;
     }
 
     @PostMapping
-    public String add(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String add(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = AuthenticatedUserContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
             logBindingResultErrors(ADD, bindingResult, user.getUsername());
-            return "redirect:/";
+            return REDIRECT_HOME;
         }
 
         if (!locationService.locationExists(locationRequest)) {
             log.warn("Attempt to add non-existent location by user={} with potentially manipulated location details. " +
                      "name={}, latitude={}, longitude={}",
                     user.getUsername(), locationRequest.getName(), locationRequest.getLatitude(), locationRequest.getLongitude());
-            return "redirect:/";
+            return REDIRECT_HOME;
         }
 
         locationService.createUserLocation(locationRequest, user);
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @DeleteMapping
-    public String delete(@Valid @ModelAttribute("location") LocationRequestDto locationRequest, BindingResult bindingResult) {
+    public String delete(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationRequestDto locationRequest, BindingResult bindingResult) {
         User user = AuthenticatedUserContext.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
             logBindingResultErrors(DELETE, bindingResult, user.getUsername());
-            return "redirect:/";
+            return REDIRECT_HOME;
         }
 
         locationService.deleteUserLocation(locationRequest, user.getId());
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     private void logBindingResultErrors(String action, BindingResult bindingResult, String username) {
