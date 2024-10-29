@@ -20,6 +20,9 @@ public class SessionService {
     @Value("${weather-tracker.session-max-age}")
     private int sessionMaxAge;
 
+    @Value("${weather-tracker.session-near-expiration-offset}")
+    private int sessionNearExpirationOffset;
+
     public Session create(User user) {
         Session session = Session.builder()
                 .id(UUID.randomUUID().toString())
@@ -40,6 +43,10 @@ public class SessionService {
 
     public void invalidate(String id) {
         sessionRepository.updateSessionExpiration(id, LocalDateTime.now());
+    }
+
+    public boolean isSessionNearExpiration(Session session) {
+        return LocalDateTime.now().isAfter(session.getExpiresAt().minusSeconds(sessionNearExpirationOffset));
     }
 
     private LocalDateTime getSessionExpiryTime() {

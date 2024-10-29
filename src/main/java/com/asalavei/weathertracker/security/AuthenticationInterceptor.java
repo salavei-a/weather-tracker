@@ -3,7 +3,6 @@ package com.asalavei.weathertracker.security;
 import com.asalavei.weathertracker.entity.Session;
 import com.asalavei.weathertracker.service.SessionService;
 import com.asalavei.weathertracker.util.CookieManager;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,7 +31,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Optional<Session> sessionOptional = getSessionIdFromCookies(request.getCookies())
+        Optional<Session> sessionOptional = CookieManager.getValueFromCookies(request.getCookies(), sessionCookieName)
                 .flatMap(sessionService::getValidSession);
 
         if (isAuthPage(request.getRequestURI())) {
@@ -55,7 +52,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         Session session = sessionOptional.get();
         String sessionId = session.getId();
 
-        if (isSessionNearExpiration(session)) {
+        if (sessionService.isSessionNearExpiration(session)) {
             sessionService.extendSession(sessionId);
             CookieManager.extendCookie(sessionCookieName, sessionCookieMaxAge, sessionId, response);
         }
@@ -69,17 +66,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         SecurityContext.clear();
     }
 
-    private Optional<String> getSessionIdFromCookies(Cookie[] cookies) {
-        if (cookies == null) {
-            return Optional.empty();
-        }
-
-        return Arrays.stream(cookies)
-                .filter(cookie -> sessionCookieName.equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst();
-    }
-
     private boolean isAuthPage(String uri) {
         return AUTH_PAGES.contains(uri);
     }
@@ -91,9 +77,5 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         return (queryString == null) ?
                 requestURL.toString() :
                 requestURL.append('?').append(queryString).toString();
-    }
-
-    private boolean isSessionNearExpiration(Session session) {
-        return LocalDateTime.now().isAfter(session.getExpiresAt().minusMinutes(5));
     }
 }
