@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.weather.weatherapi;
+package com.asalavei.weathertracker.weather.openweather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

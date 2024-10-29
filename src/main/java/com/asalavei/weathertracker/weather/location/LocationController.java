@@ -3,7 +3,7 @@ package com.asalavei.weathertracker.weather.location;
 import com.asalavei.weathertracker.auth.User;
 import com.asalavei.weathertracker.auth.UserMapper;
 import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
-import com.asalavei.weathertracker.weather.weatherapi.WeatherService;
+import com.asalavei.weathertracker.weather.WeatherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class LocationController {
             return "redirect:/";
         }
 
-        if (!weatherService.locationExists(locationRequest)) {
+        if (!locationService.locationExists(locationRequest)) {
             log.warn("Attempt to add non-existent location by user={} with potentially manipulated location details. " +
                      "name={}, latitude={}, longitude={}",
                     user.getUsername(), locationRequest.getName(), locationRequest.getLatitude(), locationRequest.getLongitude());

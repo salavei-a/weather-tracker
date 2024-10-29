@@ -1,6 +1,7 @@
-package com.asalavei.weathertracker.weather.weatherapi;
+package com.asalavei.weathertracker.weather.openweather;
 
 import com.asalavei.weathertracker.auth.SessionService;
+import com.asalavei.weathertracker.weather.WeatherService;
 import com.asalavei.weathertracker.weather.location.LocationResponseDto;
 import com.asalavei.weathertracker.exception.WeatherServiceException;
 import com.asalavei.weathertracker.weather.location.LocationService;
@@ -32,9 +33,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.web.client.RestClient.*;
 
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(properties = {
-        "weather-tracker.session-max-age=1800",
-        "weather-tracker.session-near-expiration-offset=300"})
+@TestPropertySource(properties = {"weather-tracker.session-max-age=1800", "weather-tracker.session-near-expiration-offset=300"})
 @ContextConfiguration(classes = {OpenWeatherService.class, OpenWeatherServiceTest.TestConfig.class})
 class OpenWeatherServiceTest {
 

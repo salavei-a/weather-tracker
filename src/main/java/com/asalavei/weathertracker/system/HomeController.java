@@ -3,7 +3,7 @@ package com.asalavei.weathertracker.system;
 import com.asalavei.weathertracker.auth.User;
 import com.asalavei.weathertracker.auth.UserMapper;
 import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
-import com.asalavei.weathertracker.weather.weatherapi.WeatherService;
+import com.asalavei.weathertracker.weather.UserWeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class HomeController {
 
-    private final WeatherService weatherService;
+    private final UserWeatherService userWeatherService;
     private final UserMapper userMapper;
 
     @GetMapping
@@ -24,7 +24,7 @@ public class HomeController {
 
         if (user != null) {
             model.addAttribute("user", userMapper.toDto(user));
-            model.addAttribute("locations", weatherService.getUserLocationsWeather(user.getId()));
+            model.addAttribute("locations", userWeatherService.getUserLocationsWeather(user.getId()));
         }
 
         return "home";

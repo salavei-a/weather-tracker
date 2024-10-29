@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public RestClient restClient(@Value("${weather.baseurl}") String baseUrl) {
+    public RestClient restClient(@Value("${open-weather.baseurl}") String baseUrl) {
         return RestClient.builder()
                 .baseUrl(baseUrl)
                 .build();

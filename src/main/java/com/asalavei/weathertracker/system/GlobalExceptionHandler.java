@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNoHandlerFoundException() {
         return "error/404";
-
     }
 
     @ExceptionHandler(Exception.class)

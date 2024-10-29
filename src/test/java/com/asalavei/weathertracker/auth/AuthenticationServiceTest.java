@@ -18,9 +18,7 @@ import static com.asalavei.weathertracker.util.CredentialsUtil.normalizeUsername
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(properties = {
-        "weather-tracker.session-max-age=1800",
-        "weather-tracker.session-near-expiration-offset=300"})
+@TestPropertySource(properties = {"weather-tracker.session-max-age=1800", "weather-tracker.session-near-expiration-offset=300"})
 @ContextConfiguration(classes = {TestConfig.class, AuthenticationService.class, UserService.class, SessionService.class,
         UserHibernateRepository.class, SessionHibernateRepository.class})
 class AuthenticationServiceTest {
