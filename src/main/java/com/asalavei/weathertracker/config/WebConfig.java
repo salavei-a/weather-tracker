@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.config;
 
-import com.asalavei.weathertracker.security.AuthenticationInterceptor;
+import com.asalavei.weathertracker.auth.AuthenticationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

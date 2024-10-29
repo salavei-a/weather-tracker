@@ -1,8 +1,8 @@
 package com.asalavei.weathertracker.config;
 
-import com.asalavei.weathertracker.entity.Location;
-import com.asalavei.weathertracker.entity.Session;
-import com.asalavei.weathertracker.entity.User;
+import com.asalavei.weathertracker.weather.location.Location;
+import com.asalavei.weathertracker.auth.Session;
+import com.asalavei.weathertracker.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
