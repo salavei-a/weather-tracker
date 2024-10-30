@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -30,6 +31,16 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     }
 
     @Override
+    public Optional<Location> findByUserAndCoordinates(Long userId, BigDecimal latitude, BigDecimal longitude) {
+        return executeInTransaction(s ->
+                s.createQuery("from Location where user.id = :userId and latitude = :latitude and longitude = :longitude", Location.class)
+                        .setParameter("userId", userId)
+                        .setParameter("latitude", latitude)
+                        .setParameter("longitude", longitude)
+                        .uniqueResultOptional());
+    }
+
+    @Override
     public List<Location> findAllByUser(Long userId) {
         return executeInTransaction(s ->
                 s.createQuery("from Location where user.id = :userId order by id asc", Location.class)
@@ -39,16 +50,10 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     }
 
     @Override
-    public void deleteLocationForUser(String name, BigDecimal latitude, BigDecimal longitude, Long userId) {
-        executeInTransaction(s ->
-                s.createQuery("delete from Location where name = :name " +
-                              "and latitude = :latitude " +
-                              "and longitude = :longitude " +
-                              "and user.id = :userId")
-                        .setParameter("name", name)
-                        .setParameter("latitude", latitude)
-                        .setParameter("longitude", longitude)
-                        .setParameter("userId", userId)
-                        .executeUpdate());
+    public void delete(Location location) {
+        executeInTransaction(s -> {
+            s.remove(location);
+            return Optional.empty();
+        });
     }
 }
