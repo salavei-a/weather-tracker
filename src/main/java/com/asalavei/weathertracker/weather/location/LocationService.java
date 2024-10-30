@@ -34,8 +34,11 @@ public class LocationService {
     }
 
     public void deleteUserLocation(LocationRequestDto locationRequest, Long userId) {
-        locationRepository.findByUserAndCoordinates(userId, locationRequest.getLatitude(), locationRequest.getLongitude())
-                .ifPresent(locationRepository::delete);
+        locationRepository.deleteLocationForUser(
+                locationRequest.getName(),
+                locationRequest.getLatitude(),
+                locationRequest.getLongitude(),
+                userId);
     }
 
     public boolean locationExists(LocationRequestDto locationRequest) {
