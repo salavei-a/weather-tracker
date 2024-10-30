@@ -2,7 +2,11 @@ package com.asalavei.weathertracker.auth.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.passay.*;
+import org.passay.LengthRule;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
+import org.passay.WhitespaceRule;
 
 import java.util.Arrays;
 

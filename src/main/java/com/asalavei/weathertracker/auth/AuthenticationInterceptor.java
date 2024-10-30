@@ -12,7 +12,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import static com.asalavei.weathertracker.common.Constants.*;
+import static com.asalavei.weathertracker.common.Constants.AUTH_PAGES;
+import static com.asalavei.weathertracker.common.Constants.HOME_URL;
+import static com.asalavei.weathertracker.common.Constants.SIGNIN_URL_WITH_REDIRECT;
 
 @Component
 @RequiredArgsConstructor

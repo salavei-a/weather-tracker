@@ -10,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static com.asalavei.weathertracker.common.Constants.*;
+import static com.asalavei.weathertracker.common.Constants.HOME_VIEW;
+import static com.asalavei.weathertracker.common.Constants.LOCATIONS_ATTRIBUTE;
+import static com.asalavei.weathertracker.common.Constants.USER_ATTRIBUTE;
 
 @Controller
 @RequiredArgsConstructor

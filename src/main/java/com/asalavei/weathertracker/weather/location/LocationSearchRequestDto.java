@@ -1,7 +1,8 @@
 package com.asalavei.weathertracker.weather.location;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

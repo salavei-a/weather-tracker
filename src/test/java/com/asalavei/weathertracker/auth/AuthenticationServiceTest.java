@@ -15,7 +15,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.asalavei.weathertracker.util.CredentialsUtil.normalizeUsername;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(properties = {"weather-tracker.session-max-age=1800", "weather-tracker.session-near-expiration-offset=300"})
