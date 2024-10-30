@@ -15,7 +15,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "locations", indexes = {
         @Index(name = "idx_locations_user_id_id", columnList = "user_id, id"),
-        @Index(name = "uidx_locations_user_id_latitude_longitude", columnList = "user_id, latitude, longitude", unique = true)})
+        @Index(name = "uidx_locations_user_id_latitude_longitude", columnList = "user_id, latitude, longitude", unique = true)
+})
 public class Location {
 
     @Id
