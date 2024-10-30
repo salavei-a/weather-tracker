@@ -1,6 +1,5 @@
 package com.asalavei.weathertracker.weather;
 
-import com.asalavei.weathertracker.weather.location.Location;
 import com.asalavei.weathertracker.weather.location.LocationService;
 import com.asalavei.weathertracker.weather.openweather.CurrentWeatherDto;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,7 @@ public class UserWeatherService {
     private final LocationService locationService;
 
     public List<CurrentWeatherDto> getUserLocationsWeather(Long userId) {
-        List<Location> userLocations = locationService.findAllUserLocations(userId);
-
-        return userLocations.stream()
+        return locationService.findAllUserLocations(userId).stream()
                 .map(location -> {
                     BigDecimal latitude = location.getLatitude();
                     BigDecimal longitude = location.getLongitude();
