@@ -30,8 +30,8 @@ public class UserHibernateRepository extends BaseHibernateRepository<User> imple
     @Override
     public Optional<User> findByUsername(String username) {
         return executeInTransaction(s ->
-                Optional.ofNullable(s.createQuery("from User where username = :username", User.class)
+                s.createQuery("from User where username = :username", User.class)
                         .setParameter("username", username)
-                        .uniqueResult()));
+                        .uniqueResultOptional());
     }
 }
