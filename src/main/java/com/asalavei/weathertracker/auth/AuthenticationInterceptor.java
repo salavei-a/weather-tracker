@@ -35,9 +35,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if (sessionOptional.isPresent()) {
                 response.sendRedirect(HOME_URL);
                 return false;
-            } else {
-                return true;
             }
+
+            return true;
         }
 
         if (sessionOptional.isEmpty()) {
