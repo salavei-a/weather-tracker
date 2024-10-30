@@ -1,7 +1,11 @@
 package com.asalavei.weathertracker.common;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Set;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
     public static final String USER_ATTRIBUTE = "user";
@@ -26,7 +30,4 @@ public class Constants {
     public static final String ERROR_500_VIEW = "error/500";
 
     public static final Set<String> AUTH_PAGES = Set.of(SIGNIN_URL, SIGNUP_URL);
-
-    private Constants() {
-    }
 }

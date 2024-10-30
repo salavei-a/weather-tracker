@@ -2,14 +2,14 @@ package com.asalavei.weathertracker.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CookieManager {
-
-    private CookieManager() {
-    }
 
     public static void createCookie(String cookieName, int cookieMaxAge, String cookieValue, HttpServletResponse response) {
         Cookie cookie = new Cookie(cookieName, cookieValue);

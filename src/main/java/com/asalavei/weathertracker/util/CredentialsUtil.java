@@ -1,11 +1,11 @@
 package com.asalavei.weathertracker.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CredentialsUtil {
-
-    private CredentialsUtil() {
-    }
 
     public static String normalizeUsername(String username) {
         return username.trim().toLowerCase();
