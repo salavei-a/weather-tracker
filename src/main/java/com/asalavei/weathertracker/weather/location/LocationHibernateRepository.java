@@ -39,16 +39,14 @@ public class LocationHibernateRepository extends BaseHibernateRepository<Locatio
     }
 
     @Override
-    public void deleteLocationForUser(String name, BigDecimal latitude, BigDecimal longitude, Long userId) {
+    public void deleteLocationForUser(Long userId, BigDecimal latitude, BigDecimal longitude) {
         executeInTransaction(s ->
-                s.createQuery("delete from Location where name = :name " +
+                s.createQuery("delete from Location where user.id = :userId " +
                               "and latitude = :latitude " +
-                              "and longitude = :longitude " +
-                              "and user.id = :userId")
-                        .setParameter("name", name)
+                              "and longitude = :longitude")
+                        .setParameter("userId", userId)
                         .setParameter("latitude", latitude)
                         .setParameter("longitude", longitude)
-                        .setParameter("userId", userId)
                         .executeUpdate());
     }
 }

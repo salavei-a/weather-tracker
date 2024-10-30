@@ -8,5 +8,5 @@ import java.util.List;
 public interface LocationRepository extends CrudRepository<Location> {
     List<Location> findAllByUser(Long userId);
 
-    void deleteLocationForUser(String name, BigDecimal latitude, BigDecimal longitude, Long userId);
+    void deleteLocationForUser(Long userId, BigDecimal latitude, BigDecimal longitude);
 }
