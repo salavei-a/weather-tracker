@@ -1,10 +1,8 @@
 package com.asalavei.weathertracker.weather.openweather;
 
-import com.asalavei.weathertracker.auth.session.SessionService;
 import com.asalavei.weathertracker.weather.WeatherService;
 import com.asalavei.weathertracker.weather.location.LocationResponseDto;
 import com.asalavei.weathertracker.exception.WeatherServiceException;
-import com.asalavei.weathertracker.weather.location.LocationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -192,16 +190,6 @@ class OpenWeatherServiceTest {
         @Bean
         public RestClient restClient() {
             return Mockito.mock(RestClient.class);
-        }
-
-        @Bean
-        public SessionService sessionService() {
-            return Mockito.mock(SessionService.class);
-        }
-
-        @Bean
-        public LocationService locationService() {
-            return Mockito.mock(LocationService.class);
         }
 
         @Bean
