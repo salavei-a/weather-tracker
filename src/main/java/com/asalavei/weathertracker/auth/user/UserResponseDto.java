@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.user;
 
 import lombok.Value;
 

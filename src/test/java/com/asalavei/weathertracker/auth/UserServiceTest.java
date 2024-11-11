@@ -1,5 +1,8 @@
 package com.asalavei.weathertracker.auth;
 
+import com.asalavei.weathertracker.auth.user.User;
+import com.asalavei.weathertracker.auth.user.UserHibernateRepository;
+import com.asalavei.weathertracker.auth.user.UserService;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import com.asalavei.weathertracker.exception.UserAlreadyExistsException;
 import com.asalavei.weathertracker.config.TestConfig;

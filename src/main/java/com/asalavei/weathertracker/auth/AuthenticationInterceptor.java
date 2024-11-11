@@ -1,5 +1,7 @@
 package com.asalavei.weathertracker.auth;
 
+import com.asalavei.weathertracker.auth.session.Session;
+import com.asalavei.weathertracker.auth.session.SessionService;
 import com.asalavei.weathertracker.util.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.session;
 
 import com.asalavei.weathertracker.common.CrudRepository;
 

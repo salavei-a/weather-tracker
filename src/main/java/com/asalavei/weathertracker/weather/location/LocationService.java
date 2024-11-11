@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.weather.location;
 
-import com.asalavei.weathertracker.auth.User;
+import com.asalavei.weathertracker.auth.user.User;
 import com.asalavei.weathertracker.exception.WeatherServiceException;
 import com.asalavei.weathertracker.weather.WeatherService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final WeatherService weatherService;
 
-    public void createUserLocation(LocationRequestDto locationRequest, User user) {
+    public void saveUserLocation(LocationRequestDto locationRequest, User user) {
         Location location = Location.builder()
                 .name(locationRequest.getName())
                 .user(user)

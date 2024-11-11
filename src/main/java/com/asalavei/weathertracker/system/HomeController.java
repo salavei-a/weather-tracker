@@ -1,7 +1,7 @@
 package com.asalavei.weathertracker.system;
 
-import com.asalavei.weathertracker.auth.User;
-import com.asalavei.weathertracker.auth.UserMapper;
+import com.asalavei.weathertracker.auth.user.User;
+import com.asalavei.weathertracker.auth.user.UserMapper;
 import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
 import com.asalavei.weathertracker.weather.UserWeatherService;
 import lombok.RequiredArgsConstructor;

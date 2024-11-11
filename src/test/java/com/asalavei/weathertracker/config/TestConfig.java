@@ -1,8 +1,8 @@
 package com.asalavei.weathertracker.config;
 
 import com.asalavei.weathertracker.weather.location.Location;
-import com.asalavei.weathertracker.auth.Session;
-import com.asalavei.weathertracker.auth.User;
+import com.asalavei.weathertracker.auth.session.Session;
+import com.asalavei.weathertracker.auth.user.User;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

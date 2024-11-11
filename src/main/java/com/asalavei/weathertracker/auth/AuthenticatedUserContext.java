@@ -1,5 +1,6 @@
 package com.asalavei.weathertracker.auth;
 
+import com.asalavei.weathertracker.auth.user.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

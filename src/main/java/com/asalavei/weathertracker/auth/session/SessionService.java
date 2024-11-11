@@ -1,5 +1,6 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.session;
 
+import com.asalavei.weathertracker.auth.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

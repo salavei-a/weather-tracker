@@ -1,5 +1,9 @@
 package com.asalavei.weathertracker.auth;
 
+import com.asalavei.weathertracker.auth.session.Session;
+import com.asalavei.weathertracker.auth.session.SessionService;
+import com.asalavei.weathertracker.auth.user.User;
+import com.asalavei.weathertracker.auth.user.UserService;
 import com.asalavei.weathertracker.exception.AuthenticationException;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

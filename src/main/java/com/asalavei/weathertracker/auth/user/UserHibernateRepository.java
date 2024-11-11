@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.user;
 
 import com.asalavei.weathertracker.common.BaseHibernateRepository;
 import com.asalavei.weathertracker.exception.AlreadyExistsException;

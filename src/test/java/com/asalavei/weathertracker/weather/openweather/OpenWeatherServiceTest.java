@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.weather.openweather;
 
-import com.asalavei.weathertracker.auth.SessionService;
+import com.asalavei.weathertracker.auth.session.SessionService;
 import com.asalavei.weathertracker.weather.WeatherService;
 import com.asalavei.weathertracker.weather.location.LocationResponseDto;
 import com.asalavei.weathertracker.exception.WeatherServiceException;

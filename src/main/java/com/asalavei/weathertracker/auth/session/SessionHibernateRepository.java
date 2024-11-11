@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.session;
 
 import com.asalavei.weathertracker.common.BaseHibernateRepository;
 import org.hibernate.SessionFactory;

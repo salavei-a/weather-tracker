@@ -1,7 +1,7 @@
 package com.asalavei.weathertracker.weather.location;
 
-import com.asalavei.weathertracker.auth.User;
-import com.asalavei.weathertracker.auth.UserMapper;
+import com.asalavei.weathertracker.auth.user.User;
+import com.asalavei.weathertracker.auth.user.UserMapper;
 import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
 import com.asalavei.weathertracker.weather.WeatherService;
 import jakarta.validation.Valid;
@@ -63,7 +63,7 @@ public class LocationController {
             return REDIRECT_HOME;
         }
 
-        locationService.createUserLocation(locationRequest, user);
+        locationService.saveUserLocation(locationRequest, user);
 
         return REDIRECT_HOME;
     }

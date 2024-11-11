@@ -1,4 +1,4 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

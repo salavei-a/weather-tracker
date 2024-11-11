@@ -1,5 +1,6 @@
-package com.asalavei.weathertracker.auth;
+package com.asalavei.weathertracker.auth.user;
 
+import com.asalavei.weathertracker.auth.SignUpRequestDto;
 import com.asalavei.weathertracker.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

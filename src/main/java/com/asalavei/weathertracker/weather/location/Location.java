@@ -1,6 +1,6 @@
 package com.asalavei.weathertracker.weather.location;
 
-import com.asalavei.weathertracker.auth.User;
+import com.asalavei.weathertracker.auth.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
