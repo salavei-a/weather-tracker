@@ -58,13 +58,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             CookieManager.extendCookie(sessionCookieName, sessionCookieMaxAge, sessionId, response);
         }
 
-        AuthenticatedUserContext.setAuthenticatedUser(session.getUser());
+        AuthenticatedUserThreadLocal.setAuthenticatedUser(session.getUser());
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        AuthenticatedUserContext.clear();
+        AuthenticatedUserThreadLocal.clear();
     }
 
     private boolean isAuthPage(String uri) {

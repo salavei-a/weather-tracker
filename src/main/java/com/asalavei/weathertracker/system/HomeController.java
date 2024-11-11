@@ -2,7 +2,7 @@ package com.asalavei.weathertracker.system;
 
 import com.asalavei.weathertracker.auth.user.User;
 import com.asalavei.weathertracker.auth.user.UserMapper;
-import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
+import com.asalavei.weathertracker.auth.AuthenticatedUserThreadLocal;
 import com.asalavei.weathertracker.weather.UserWeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class HomeController {
 
     @GetMapping
     public String homePage(Model model) {
-        User user = AuthenticatedUserContext.getAuthenticatedUser();
+        User user = AuthenticatedUserThreadLocal.getAuthenticatedUser();
 
         if (user != null) {
             model.addAttribute(USER_ATTRIBUTE, userMapper.toDto(user));

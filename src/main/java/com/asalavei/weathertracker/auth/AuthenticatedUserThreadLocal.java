@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * Stored authenticated user for the current request
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AuthenticatedUserContext {
+public class AuthenticatedUserThreadLocal {
 
     private static final ThreadLocal<User> context = new ThreadLocal<>();
 

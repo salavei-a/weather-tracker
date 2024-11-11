@@ -2,7 +2,7 @@ package com.asalavei.weathertracker.weather.location;
 
 import com.asalavei.weathertracker.auth.user.User;
 import com.asalavei.weathertracker.auth.user.UserMapper;
-import com.asalavei.weathertracker.auth.AuthenticatedUserContext;
+import com.asalavei.weathertracker.auth.AuthenticatedUserThreadLocal;
 import com.asalavei.weathertracker.weather.WeatherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class LocationController {
 
     @GetMapping
     public String search(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationSearchRequestDto locationSearchRequest, BindingResult bindingResult, Model model) {
-        User user = AuthenticatedUserContext.getAuthenticatedUser();
+        User user = AuthenticatedUserThreadLocal.getAuthenticatedUser();
         model.addAttribute(USER_ATTRIBUTE, userMapper.toDto(user));
 
         if (bindingResult.hasErrors()) {
@@ -49,7 +49,7 @@ public class LocationController {
 
     @PostMapping
     public String add(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationRequestDto locationRequest, BindingResult bindingResult) {
-        User user = AuthenticatedUserContext.getAuthenticatedUser();
+        User user = AuthenticatedUserThreadLocal.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
             logBindingResultErrors(ADD, bindingResult, user.getUsername());
@@ -70,7 +70,7 @@ public class LocationController {
 
     @DeleteMapping
     public String delete(@Valid @ModelAttribute(LOCATION_ATTRIBUTE) LocationRequestDto locationRequest, BindingResult bindingResult) {
-        User user = AuthenticatedUserContext.getAuthenticatedUser();
+        User user = AuthenticatedUserThreadLocal.getAuthenticatedUser();
 
         if (bindingResult.hasErrors()) {
             logBindingResultErrors(DELETE, bindingResult, user.getUsername());
