@@ -8,7 +8,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(final Object obj, final ConstraintValidatorContext constraintValidatorContext) {
-        final SignUpRequestDto signUpDto = (SignUpRequestDto) obj;
-        return signUpDto.getPassword().equals(signUpDto.getMatchingPassword());
+        final SignUpRequestDto signUpRequest = (SignUpRequestDto) obj;
+        return signUpRequest.getPassword().equals(signUpRequest.getMatchingPassword());
     }
 }
