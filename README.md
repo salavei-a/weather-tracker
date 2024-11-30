@@ -29,7 +29,7 @@ Users can register, add various locations (cities, towns, etc.) to their collect
 ## Interface
 
 ![screenshot_sign_up.png](img/screenshot_sign_up.png)
-![screenshot_match_sign_in.png](img/screenshot_match_sign_in.png)
+![screenshot_sign_in.png](img/screenshot_sign_in.png)
 ![screenshot_home.png](img/screenshot_home.png)
 ![screenshot_search_locations.png](img/screenshot_search_locations.png)
 
